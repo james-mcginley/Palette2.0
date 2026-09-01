@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Roboto+Mono:wght@400;500;700&display=swap">
+<style>
+:root{
+  --ob:#09120E; --ob2:#0B1712; --em:#0E3B2E; --em2:#0A2C22; --sunk:#071510;
+  --mint:#1D6B54; --mint-d:#14352a; --clay:#C87D53; --clay2:#C4703E;
+  --olive:#6E7B47; --blue:#3A5A7A;
+  --ala:#FAF8F5; --slate:#809B8E; --slate-d:#5E7568;
+  --f:'Roboto',-apple-system,system-ui,sans-serif;
+  --m:'Roboto Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ob);color:var(--ala);font-family:var(--f);-webkit-font-smoothing:antialiased}
+a{color:var(--clay);text-decoration:none}
+a:hover{color:#E0996F}
+::selection{background:rgba(200,125,83,0.3)}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes coreGlow{0%,100%{opacity:0.75}50%{opacity:1}}
+@media (max-width:900px){
+  .wrap{padding-left:24px !important;padding-right:24px !important}
+  .row{flex-direction:column !important;gap:48px !important}
+  .h1{font-size:52px !important}
+  .h2{font-size:34px !important}
+  .grid3,.grid4{grid-template-columns:1fr !important}
+  .navlinks{display:none !important}
+  .hidemob{display:none !important}
+}
+</style>
+</helmet>
+
+<div style="max-width:100%;overflow-x:hidden">
+
+<header style="position:sticky;top:0;z-index:50;background:rgba(9,18,14,0.86);backdrop-filter:blur(18px);border-bottom:1px solid var(--mint-d)">
+  <div class="wrap" style="max-width:1240px;margin:0 auto;padding:18px 48px;display:flex;align-items:center;justify-content:space-between;gap:24px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <svg width="34" height="34" viewBox="0 0 100 100" style="flex-shrink:0">
+        <rect width="100" height="100" rx="26" fill="#123527"></rect>
+        <path d="M45 -6 A41 41 0 0 1 45 76" stroke="#C4703E" stroke-width="7" fill="none"></path>
+        <path d="M45 1 A34 34 0 0 1 45 69" stroke="#3A5A7A" stroke-width="7" fill="none"></path>
+        <path d="M45 8 A27 27 0 0 1 45 62" stroke="#6E7B47" stroke-width="7" fill="none"></path>
+        <path d="M20 14 H45 A21 21 0 0 1 45 56 H33 V86 H20 Z" fill="#F4F1E9"></path>
+        <ellipse cx="44" cy="35" rx="9" ry="8.5" fill="#123527"></ellipse>
+      </svg>
+      <span style="font-size:20px;font-weight:700;letter-spacing:-0.02em">Palette</span>
+    </div>
+    <nav class="navlinks" style="display:flex;align-items:center;gap:34px">
+      <a href="#what" style="color:var(--slate);font-size:14px;font-weight:500">What it is</a>
+      <a href="#log" style="color:var(--slate);font-size:14px;font-weight:500">Logging</a>
+      <a href="#discover" style="color:var(--slate);font-size:14px;font-weight:500">Discover</a>
+      <a href="#local" style="color:var(--slate);font-size:14px;font-weight:500">Local</a>
+      <a href="#privacy" style="color:var(--slate);font-size:14px;font-weight:500">Privacy</a>
+    </nav>
+    <a href="#get" style="background:var(--clay);color:var(--ob);font-size:14px;font-weight:700;padding:11px 22px;border-radius:20px 10px 18px 12px;white-space:nowrap">Get the app</a>
+  </div>
+</header>
+
+<section class="wrap" style="max-width:1240px;margin:0 auto;padding:100px 48px 110px;background:radial-gradient(110% 80% at 15% 5%, rgba(18,53,38,0.85) 0%, rgba(9,18,14,0) 62%)">
+  <div class="row" style="display:flex;align-items:center;gap:80px">
+    <div style="flex:1;min-width:0">
+      <div style="font-family:var(--m);font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:var(--clay)">Your Cultural Trove</div>
+      <h1 class="h1" style="font-size:74px;line-height:1.04;font-weight:700;letter-spacing:-0.03em;margin:22px 0 0">Keep everything that moved you.</h1>
+      <p style="font-size:21px;line-height:1.5;color:var(--slate);margin:28px 0 0;max-width:560px">Books, film, television, records, podcasts and nights out — logged in seconds, kept in one archive, and shared only if you want to.</p>
+      <div style="display:flex;align-items:center;gap:16px;margin-top:40px;flex-wrap:wrap">
+        <a href="#get" style="display:flex;align-items:center;gap:11px;background:var(--clay);color:var(--ob);font-size:16px;font-weight:700;padding:15px 28px;border-radius:24px 11px 20px 14px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.7c0-2.4 2-3.6 2.1-3.6-1.1-1.7-2.9-1.9-3.6-1.9-1.5-.2-3 .9-3.7.9-.8 0-2-.9-3.2-.8-1.7 0-3.2 1-4 2.5-1.7 3-.4 7.4 1.2 9.8.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.1-.8 1.5 0 1.9.8 3.2.8 1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.7 1.3-2.8-.1 0-2.4-1-2.4-3.6zM14 4.9c.7-.8 1.1-2 1-3.1-1 0-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.4z"/></svg>
+          Download on iOS
+        </a>
+        <span style="font-family:var(--m);font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:var(--slate-d)">Android coming soon</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:22px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--slate-d)" stroke-width="2" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="3"></rect><path d="M11 18h2"></path></svg>
+        <span style="font-size:13px;color:var(--slate-d)">Palette is a mobile app. This page is just the shop window.</span>
+      </div>
+    </div>
+
+    <div class="hidemob" style="flex-shrink:0;animation:floatY 7s ease-in-out infinite">
+      <div style="width:326px;height:672px;border-radius:52px;background:#05100B;border:1px solid var(--mint);box-shadow:0 60px 120px rgba(0,0,0,0.65);padding:14px">
+        <div style="width:100%;height:100%;border-radius:39px;overflow:hidden;background:var(--ob);position:relative;display:flex;flex-direction:column">
+          <div style="padding:20px 20px 14px;display:flex;align-items:center;justify-content:space-between">
+            <span style="font-size:23px;font-weight:700;letter-spacing:-0.02em">Feed</span>
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--em);border:1px solid var(--mint)"></div>
+          </div>
+          <div style="margin:0 18px 13px;border-radius:22px 10px 18px 13px;padding:15px;background:linear-gradient(150deg,rgba(200,125,83,0.3),rgba(14,59,46,0.85));border:1px solid var(--clay)">
+            <div style="font-family:var(--m);font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:#F4D9C6">Today's log</div>
+            <div style="font-size:17px;font-weight:500;margin-top:7px">What moved you today?</div>
+          </div>
+          <div style="margin:0 18px 11px;display:flex;gap:12px;align-items:center;background:var(--ob2);border:1px solid var(--mint-d);border-radius:18px 8px 15px 11px;padding:12px">
+            <img src="https://upload.wikimedia.org/wikipedia/en/4/45/In_the_Mood_for_Love_movie.jpg" loading="lazy" style="width:48px;height:68px;border-radius:8px 3px 7px 4px;object-fit:cover;flex-shrink:0;background:var(--em)"/>
+            <div style="min-width:0">
+              <div style="font-family:var(--m);font-size:8.5px;letter-spacing:0.13em;text-transform:uppercase;color:var(--slate)">Niamh · Film</div>
+              <div style="font-size:14.5px;font-weight:500;margin-top:4px;line-height:1.2">In the Mood for Love</div>
+              <div style="font-size:11px;color:var(--clay);margin-top:5px;letter-spacing:2px">★★★★★</div>
+            </div>
+          </div>
+          <div style="margin:0 18px 11px;display:flex;gap:12px;align-items:center;background:var(--ob2);border:1px solid var(--mint-d);border-radius:18px 8px 15px 11px;padding:12px">
+            <img src="https://covers.openlibrary.org/b/id/12715939-L.jpg" loading="lazy" style="width:48px;height:68px;border-radius:8px 3px 7px 4px;object-fit:cover;flex-shrink:0;background:var(--em)"/>
+            <div style="min-width:0">
+              <div style="font-family:var(--m);font-size:8.5px;letter-spacing:0.13em;text-transform:uppercase;color:var(--slate)">Will · Book</div>
+              <div style="font-size:14.5px;font-weight:500;margin-top:4px;line-height:1.2">A Promised Land</div>
+              <div style="font-size:11px;color:var(--clay);margin-top:5px;letter-spacing:2px">★★★★☆</div>
+            </div>
+          </div>
+          <div style="margin:0 18px;display:flex;gap:12px;align-items:center;background:var(--ob2);border:1px solid var(--mint-d);border-radius:18px 8px 15px 11px;padding:12px">
+            <img src="https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/e5/24/aa/e524aacd-467b-66f3-8931-0fcd6750a4b9/08UMGIM07914.rgb.jpg/600x600bb.jpg" loading="lazy" style="width:48px;height:48px;border-radius:7px;object-fit:cover;flex-shrink:0;background:var(--em)"/>
+            <div style="min-width:0">
+              <div style="font-family:var(--m);font-size:8.5px;letter-spacing:0.13em;text-transform:uppercase;color:var(--slate)">Ally · Vinyl</div>
+              <div style="font-size:14.5px;font-weight:500;margin-top:4px;line-height:1.2">Heavy rotation</div>
+              <div style="font-size:11px;color:var(--clay);margin-top:5px;letter-spacing:2px">★★★★★</div>
+            </div>
+          </div>
+          <div style="margin-top:auto;display:flex;justify-content:space-around;align-items:center;padding:15px 0;border-top:1px solid var(--mint-d);background:var(--ob2)">
+            <span style="font-family:var(--m);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--clay)">Feed</span>
+            <span style="font-family:var(--m);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--slate-d)">Friends</span>
+            <div style="width:38px;height:38px;border-radius:50%;background:var(--clay);display:flex;align-items:center;justify-content:center;color:var(--ob);font-size:23px;font-weight:400;margin-top:-8px">+</div>
+            <span style="font-family:var(--m);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--slate-d)">Discover</span>
+            <span style="font-family:var(--m);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--slate-d)">Library</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="what" class="wrap" style="max-width:1240px;margin:0 auto;padding:96px 48px;border-top:1px solid var(--mint-d)">
+  <div style="font-family:var(--m);font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:var(--clay)">One archive, every medium</div>
+  <h2 class="h2" style="font-size:46px;line-height:1.12;font-weight:700;letter-spacing:-0.025em;margin:20px 0 0;max-width:800px">Six things you love, finally on one shelf.</h2>
+  <p style="font-size:18px;line-height:1.55;color:var(--slate);margin:22px 0 0;max-width:660px">Most people keep five apps and remember none of it. Palette treats a novel, a gig and a podcast episode as the same kind of thing: something you spent your evening on.</p>
+  <div class="grid3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:52px">
+    <div style="background:var(--em2);border:1px solid var(--mint);border-radius:28px 12px 24px 16px;padding:32px 26px">
+      <div style="font-family:var(--m);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--clay)">Screen</div>
+      <div style="font-size:24px;font-weight:700;margin-top:14px;letter-spacing:-0.02em">Film &amp; Television</div>
+      <p style="font-size:14.5px;line-height:1.55;color:var(--slate);margin:12px 0 0">Features, series and the one-off documentary you'll want to recommend later.</p>
+    </div>
+    <div style="background:var(--em2);border:1px solid var(--mint);border-radius:12px 28px 16px 24px;padding:32px 26px">
+      <div style="font-family:var(--m);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--olive)">Print</div>
+      <div style="font-size:24px;font-weight:700;margin-top:14px;letter-spacing:-0.02em">Books</div>
+      <p style="font-size:14.5px;line-height:1.55;color:var(--slate);margin:12px 0 0">Track what you're partway through, not just what you finished.</p>
+    </div>
+    <div style="background:var(--em2);border:1px solid var(--mint);border-radius:24px 16px 28px 12px;padding:32px 26px">
+      <div style="font-family:var(--m);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--blue)">Sound</div>
+      <div style="font-size:24px;font-weight:700;margin-top:14px;letter-spacing:-0.02em">Music &amp; Podcasts</div>
+      <p style="font-size:14.5px;line-height:1.55;color:var(--slate);margin:12px 0 0">Albums as albums. Thirty-second previews before you commit.</p>
+    </div>
+    <div style="background:var(--em2);border:1px solid var(--mint);border-radius:16px 24px 12px 28px;padding:32px 26px">
+      <div style="font-family:var(--m);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--clay2)">Live</div>
+      <div style="font-size:24px;font-weight:700;margin-top:14px;letter-spacing:-0.02em">Gigs &amp; Exhibitions</div>
+      <p style="font-size:14.5px;line-height:1.55;color:var(--slate);margin:12px 0 0">The night at the Barrowland counts as much as the film you streamed.</p>
+    </div>
+    <div style="background:var(--em2);border:1px solid var(--mint);border-radius:28px 12px 24px 16px;padding:32px 26px">
+      <div style="font-family:var(--m);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--clay)">Real data</div>
+      <div style="font-size:24px;font-weight:700;margin-top:14px;letter-spacing:-0.02em">Actual artwork</div>
+      <p style="font-size:14.5px;line-height:1.55;color:var(--slate);margin:12px 0 0">Genuine covers, casts and synopses pulled in as you type. No placeholders.</p>
+    </div>
+    <div style="background:var(--em2);border:1px solid var(--mint);border-radius:12px 28px 16px 24px;padding:32px 26px">
+      <div style="font-family:var(--m);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--olive)">History</div>
+      <div style="font-size:24px;font-weight:700;margin-top:14px;letter-spacing:-0.02em">A year, at a glance</div>
+      <p style="font-size:14.5px;line-height:1.55;color:var(--slate);margin:12px 0 0">Filter by medium, month or rating. Your monthly mosaic builds itself.</p>
+    </div>
+  </div>
+</section>
+
+<section id="log" class="wrap" style="max-width:1240px;margin:0 auto;padding:96px 48px;border-top:1px solid var(--mint-d)">
+  <div style="font-family:var(--m);font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:var(--clay)">The core loop</div>
+  <h2 class="h2" style="font-size:46px;line-height:1.12;font-weight:700;letter-spacing:-0.025em;margin:20px 0 0;max-width:780px">Logging is the whole point, so it takes seconds.</h2>
+  <div class="grid3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:58px">
+    <div style="padding-right:44px">
+      <div style="font-size:44px;font-weight:900;color:var(--clay);letter-spacing:-0.03em">01</div>
+      <div style="font-size:20px;font-weight:700;margin-top:14px;letter-spacing:-0.015em">Search the real title</div>
+      <p style="font-size:15px;line-height:1.55;color:var(--slate);margin:10px 0 0">Cover, year, director or author load automatically as you type.</p>
+    </div>
+    <div style="padding:0 44px;border-left:1px solid var(--mint-d)">
+      <div style="font-size:44px;font-weight:900;color:var(--olive);letter-spacing:-0.03em">02</div>
+      <div style="font-size:20px;font-weight:700;margin-top:14px;letter-spacing:-0.015em">Rate it, note it</div>
+      <p style="font-size:15px;line-height:1.55;color:var(--slate);margin:10px 0 0">Five stars and a line if you have one. Skip both if you don't.</p>
+    </div>
+    <div style="padding-left:44px;border-left:1px solid var(--mint-d)">
+      <div style="font-size:44px;font-weight:900;color:var(--blue);letter-spacing:-0.03em">03</div>
+      <div style="font-size:20px;font-weight:700;margin-top:14px;letter-spacing:-0.015em">Save to Palette, or keep it private</div>
+      <p style="font-size:15px;line-height:1.55;color:var(--slate);margin:10px 0 0">Private logs stay off your profile and out of every count. Always.</p>
+    </div>
+  </div>
+</section>
+
+<section id="discover" class="wrap" style="max-width:1240px;margin:0 auto;padding:96px 48px;border-top:1px solid var(--mint-d)">
+  <div class="row" style="display:flex;align-items:flex-start;gap:80px">
+    <div style="flex:1;min-width:0">
+      <div style="font-family:var(--m);font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:var(--clay)">Discover</div>
+      <h2 class="h2" style="font-size:46px;line-height:1.12;font-weight:700;letter-spacing:-0.025em;margin:20px 0 0">Taste from people, not an algorithm.</h2>
+      <p style="font-size:18px;line-height:1.55;color:var(--slate);margin:22px 0 0;max-width:520px">Shelves with an opinion, curators worth following, and a quiet chart of what everyone's logging. Nothing engineered to keep you scrolling.</p>
+      <div style="display:flex;flex-direction:column;gap:22px;margin-top:38px">
+        <div style="display:flex;gap:16px;align-items:flex-start">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--clay);flex-shrink:0;margin-top:8px"></div>
+          <div><div style="font-size:17px;font-weight:700;letter-spacing:-0.015em">Curated shelves</div><p style="font-size:14.5px;line-height:1.55;color:var(--slate);margin:6px 0 0">"Scottish Cinema, Unsentimental." "Records For Four In The Morning." Someone chose these.</p></div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--olive);flex-shrink:0;margin-top:8px"></div>
+          <div><div style="font-size:17px;font-weight:700;letter-spacing:-0.015em">People to follow</div><p style="font-size:14.5px;line-height:1.55;color:var(--slate);margin:6px 0 0">Critics, friends and the record shop down the road, all sharing what they're actually on.</p></div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:flex-start">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:8px"></div>
+          <div><div style="font-size:17px;font-weight:700;letter-spacing:-0.015em">Asks</div><p style="font-size:14.5px;line-height:1.55;color:var(--slate);margin:6px 0 0">"Something like In the Mood for Love?" Real answers, saved straight to your list.</p></div>
+        </div>
+      </div>
+    </div>
+    <div style="flex:1;min-width:0">
+      <div style="background:var(--em2);border:1px solid var(--mint);border-radius:30px 14px 26px 18px;padding:28px;box-shadow:0 30px 70px rgba(0,0,0,0.4)">
+        <div style="font-family:var(--m);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--slate)">Longing, Neon &amp; 35mm</div>
+        <div style="display:flex;gap:11px;margin-top:16px">
+          <img src="https://upload.wikimedia.org/wikipedia/en/4/45/In_the_Mood_for_Love_movie.jpg" loading="lazy" style="width:33%;aspect-ratio:2/3;object-fit:cover;border-radius:12px 5px 10px 7px;background:var(--em)"/>
+          <img src="https://upload.wikimedia.org/wikipedia/en/1/11/Aftersun.jpg" loading="lazy" style="width:33%;aspect-ratio:2/3;object-fit:cover;border-radius:12px 5px 10px 7px;background:var(--em)"/>
+          <img src="https://upload.wikimedia.org/wikipedia/en/f/f1/Chungking_Express_poster.jpg" loading="lazy" style="width:33%;aspect-ratio:2/3;object-fit:cover;border-radius:12px 5px 10px 7px;background:var(--em)"/>
+        </div>
+        <div style="font-family:var(--m);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--slate);margin-top:26px">Most logged this week</div>
+        <div style="display:flex;flex-direction:column;gap:0;margin-top:12px">
+          <div style="display:flex;align-items:center;gap:13px;padding:10px 0;border-bottom:1px solid var(--mint-d)">
+            <span style="font-family:var(--m);font-size:12px;color:var(--slate-d);width:20px">01</span>
+            <span style="flex:1;font-size:14.5px;font-weight:500">Andor</span>
+            <span style="font-family:var(--m);font-size:10px;color:var(--slate)">2.1k</span>
+            <span style="font-family:var(--m);font-size:13px;color:var(--clay)">↑</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:13px;padding:10px 0;border-bottom:1px solid var(--mint-d)">
+            <span style="font-family:var(--m);font-size:12px;color:var(--slate-d);width:20px">02</span>
+            <span style="flex:1;font-size:14.5px;font-weight:500">Orbital</span>
+            <span style="font-family:var(--m);font-size:10px;color:var(--slate)">1.6k</span>
+            <span style="font-family:var(--m);font-size:13px;color:var(--slate)">–</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:13px;padding:10px 0">
+            <span style="font-family:var(--m);font-size:12px;color:var(--slate-d);width:20px">03</span>
+            <span style="flex:1;font-size:14.5px;font-weight:500">Diamond Jubilee</span>
+            <span style="font-family:var(--m);font-size:10px;color:var(--slate)">1.2k</span>
+            <span style="font-family:var(--m);font-size:13px;color:var(--clay)">↑</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="local" class="wrap" style="max-width:1240px;margin:0 auto;padding:96px 48px;border-top:1px solid var(--mint-d);background:linear-gradient(160deg, rgba(14,59,46,0.5) 0%, rgba(9,18,14,0) 70%)">
+  <div style="font-family:var(--m);font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:var(--clay)">Local curation</div>
+  <h2 class="h2" style="font-size:46px;line-height:1.12;font-weight:700;letter-spacing:-0.025em;margin:20px 0 0;max-width:760px">The best curators are usually down the road.</h2>
+  <p style="font-size:18px;line-height:1.55;color:var(--slate);margin:22px 0 0;max-width:640px">Independent shops, cinemas and venues share what they're into this week — the same way any other member does.</p>
+  <div class="grid3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:48px">
+    <div style="background:var(--ob2);border:1px solid var(--mint);border-radius:26px 12px 22px 16px;padding:30px 26px">
+      <div style="font-size:22px;font-weight:700;letter-spacing:-0.02em">The Portobello Bookshop</div>
+      <div style="font-family:var(--m);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--slate);margin-top:12px">Edinburgh · Staff picks weekly</div>
+    </div>
+    <div style="background:var(--ob2);border:1px solid var(--mint);border-radius:12px 26px 16px 22px;padding:30px 26px">
+      <div style="font-size:22px;font-weight:700;letter-spacing:-0.02em">Cameo Cinema</div>
+      <div style="font-family:var(--m);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--slate);margin-top:12px">Home Street · 35mm retrospectives</div>
+    </div>
+    <div style="background:var(--ob2);border:1px solid var(--mint);border-radius:22px 16px 26px 12px;padding:30px 26px">
+      <div style="font-size:22px;font-weight:700;letter-spacing:-0.02em">Assai Records</div>
+      <div style="font-family:var(--m);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--slate);margin-top:12px">Edinburgh &amp; Dundee · Heavy rotation</div>
+    </div>
+  </div>
+</section>
+
+<section id="privacy" class="wrap" style="max-width:1240px;margin:0 auto;padding:96px 48px;border-top:1px solid var(--mint-d)">
+  <div style="font-family:var(--m);font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:var(--clay)">Yours to control</div>
+  <h2 class="h2" style="font-size:46px;line-height:1.12;font-weight:700;letter-spacing:-0.025em;margin:20px 0 0;max-width:700px">No scoreboard. No contest.</h2>
+  <p style="font-size:18px;line-height:1.55;color:var(--slate);margin:22px 0 0;max-width:640px">Taste isn't a competitive sport, so Palette gives you switches for all of it.</p>
+  <div class="grid3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:44px;margin-top:48px">
+    <div>
+      <div style="font-size:20px;font-weight:700;color:var(--clay2);letter-spacing:-0.02em">Private logs</div>
+      <p style="font-size:15px;line-height:1.55;color:var(--slate);margin:10px 0 0">Keep the guilty pleasures to yourself. Off your feed, off your profile, out of every count.</p>
+    </div>
+    <div>
+      <div style="font-size:20px;font-weight:700;color:var(--olive);letter-spacing:-0.02em">Private profile</div>
+      <p style="font-size:15px;line-height:1.55;color:var(--slate);margin:10px 0 0">Approve who sees your library, or keep the whole thing to yourself.</p>
+    </div>
+    <div>
+      <div style="font-size:20px;font-weight:700;color:var(--blue);letter-spacing:-0.02em">Hide the numbers</div>
+      <p style="font-size:15px;line-height:1.55;color:var(--slate);margin:10px 0 0">Switch off follower, like and log counts entirely if you'd rather not see them.</p>
+    </div>
+  </div>
+</section>
+
+<section id="get" class="wrap" style="max-width:1240px;margin:0 auto;padding:110px 48px;border-top:1px solid var(--mint-d)">
+  <div style="background:radial-gradient(120% 130% at 20% 10%, #123526 0%, #0A2419 55%, #09120E 100%);border:1px solid var(--mint);border-radius:44px 20px 38px 26px;padding:72px 64px;text-align:center;box-shadow:0 40px 90px rgba(0,0,0,0.45)">
+    <svg width="76" height="76" viewBox="0 0 100 100" style="animation:coreGlow 3.2s ease-in-out infinite">
+      <rect width="100" height="100" rx="26" fill="#123527"></rect>
+      <path d="M45 -6 A41 41 0 0 1 45 76" stroke="#C4703E" stroke-width="7" fill="none"></path>
+      <path d="M45 1 A34 34 0 0 1 45 69" stroke="#3A5A7A" stroke-width="7" fill="none"></path>
+      <path d="M45 8 A27 27 0 0 1 45 62" stroke="#6E7B47" stroke-width="7" fill="none"></path>
+      <path d="M20 14 H45 A21 21 0 0 1 45 56 H33 V86 H20 Z" fill="#F4F1E9"></path>
+      <ellipse cx="44" cy="35" rx="9" ry="8.5" fill="#123527"></ellipse>
+    </svg>
+    <h2 class="h2" style="font-size:52px;line-height:1.1;font-weight:700;letter-spacing:-0.03em;margin:28px auto 0;max-width:620px">Curate what moves you.</h2>
+    <p style="font-size:18px;line-height:1.5;color:var(--slate);margin:20px auto 0;max-width:480px">Free to use. No suggested posts on Palette Plus.</p>
+    <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-top:38px;flex-wrap:wrap">
+      <a href="#" style="display:flex;align-items:center;gap:11px;background:var(--clay);color:var(--ob);font-size:16px;font-weight:700;padding:16px 30px;border-radius:24px 11px 20px 14px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.7c0-2.4 2-3.6 2.1-3.6-1.1-1.7-2.9-1.9-3.6-1.9-1.5-.2-3 .9-3.7.9-.8 0-2-.9-3.2-.8-1.7 0-3.2 1-4 2.5-1.7 3-.4 7.4 1.2 9.8.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.1-.8 1.5 0 1.9.8 3.2.8 1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.7 1.3-2.8-.1 0-2.4-1-2.4-3.6zM14 4.9c.7-.8 1.1-2 1-3.1-1 0-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.4z"/></svg>
+        Download on iOS
+      </a>
+      <a href="#" style="border:1px solid var(--mint);color:var(--ala);font-size:16px;font-weight:600;padding:15px 28px;border-radius:24px 11px 20px 14px">Join the Android list</a>
+    </div>
+  </div>
+</section>
+
+<footer style="border-top:1px solid var(--mint-d);background:var(--sunk)">
+  <div class="wrap" style="max-width:1240px;margin:0 auto;padding:56px 48px">
+    <div class="row" style="display:flex;gap:60px;align-items:flex-start">
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:11px">
+          <svg width="28" height="28" viewBox="0 0 100 100">
+            <rect width="100" height="100" rx="26" fill="#123527"></rect>
+            <path d="M45 -6 A41 41 0 0 1 45 76" stroke="#C4703E" stroke-width="7" fill="none"></path>
+            <path d="M45 1 A34 34 0 0 1 45 69" stroke="#3A5A7A" stroke-width="7" fill="none"></path>
+            <path d="M45 8 A27 27 0 0 1 45 62" stroke="#6E7B47" stroke-width="7" fill="none"></path>
+            <path d="M20 14 H45 A21 21 0 0 1 45 56 H33 V86 H20 Z" fill="#F4F1E9"></path>
+            <ellipse cx="44" cy="35" rx="9" ry="8.5" fill="#123527"></ellipse>
+          </svg>
+          <span style="font-size:17px;font-weight:700;letter-spacing:-0.02em">Palette</span>
+        </div>
+        <p style="font-size:13.5px;line-height:1.6;color:var(--slate-d);margin:16px 0 0;max-width:300px">A high-taste archive for logging, curating and discovering culture. Mobile only, by design.</p>
+      </div>
+      <div style="flex:2;min-width:0">
+        <div style="font-family:var(--m);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--slate-d)">Data &amp; artwork</div>
+        <div class="grid4" style="display:grid;grid-template-columns:repeat(2,1fr);gap:18px 32px;margin-top:16px">
+          <div><div style="font-size:13px;font-weight:600;color:var(--slate)">Wikipedia / Wikimedia</div><div style="font-size:11.5px;line-height:1.5;color:var(--slate-d);margin-top:3px">Film artwork and synopses, CC BY-SA</div></div>
+          <div><div style="font-size:13px;font-weight:600;color:var(--slate)">TVmaze</div><div style="font-size:11.5px;line-height:1.5;color:var(--slate-d);margin-top:3px">Series data and artwork via the TVmaze API</div></div>
+          <div><div style="font-size:13px;font-weight:600;color:var(--slate)">Open Library</div><div style="font-size:11.5px;line-height:1.5;color:var(--slate-d);margin-top:3px">Book covers and descriptions, Internet Archive</div></div>
+          <div><div style="font-size:13px;font-weight:600;color:var(--slate)">Apple Music &amp; Podcasts</div><div style="font-size:11.5px;line-height:1.5;color:var(--slate-d);margin-top:3px">Artwork and previews via the iTunes Search API</div></div>
+        </div>
+        <p style="font-size:11.5px;line-height:1.6;color:var(--slate-d);margin:20px 0 0;max-width:620px">Palette uses these APIs but is not endorsed or certified by them. Metadata and artwork remain the property of their respective sources.</p>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:44px;padding-top:26px;border-top:1px solid var(--mint-d);flex-wrap:wrap">
+      <span style="font-family:var(--m);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--slate-d)">© 2026 Palette</span>
+      <div style="display:flex;gap:26px">
+        <a href="#" style="font-size:13px;color:var(--slate-d)">Privacy</a>
+        <a href="#" style="font-size:13px;color:var(--slate-d)">Terms</a>
+        <a href="#" style="font-size:13px;color:var(--slate-d)">Press</a>
+        <a href="#" style="font-size:13px;color:var(--slate-d)">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</div>
+</x-dc>
+</body>
+</html>

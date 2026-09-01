@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+:root{
+  --ob:#09120E; --ob2:#0B1712; --em:#0E3B2E; --em2:#0A2C22; --mint:#1D6B54; --mint2:#2E7D64;
+  --clay:#C87D53; --clay2:#C4703E; --olive:#6E7B47; --blue:#3A5A7A;
+  --ala:#FAF8F5; --slate:#809B8E; --slate2:#5E7568;
+  --title:64px; --big:120px; --sub:40px; --body:30px; --small:24px; --mono:20px;
+  --px:110px; --py:92px;
+}
+section{ background:var(--ob); color:var(--ala); font-family:'Inter',system-ui,sans-serif; overflow:hidden; }
+.mono{ font-family:'JetBrains Mono',monospace; letter-spacing:0.18em; text-transform:uppercase; }
+.serif{ font-family:'Playfair Display',Georgia,serif; }
+</style>
+</helmet>
+<x-import component-from-global-scope="deck-stage" from="./deck/deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Cover" data-speaker-notes="Palette — a high-taste, cross-media archive for logging and discovering culture. This deck walks through what it is and how it works." style="display:flex;flex-direction:column;justify-content:center;padding:0 var(--px);background:radial-gradient(120% 90% at 22% 20%, #12352600 0%, #0A2419 55%, #09120E 100%);">
+  <div style="display:flex;align-items:center;gap:40px;">
+    <svg width="150" height="150" viewBox="0 0 100 100" style="flex-shrink:0;filter:drop-shadow(0 0 40px rgba(200,125,83,0.4));">
+      <rect width="100" height="100" rx="26" fill="#123527"></rect>
+      <path d="M45 -6 A41 41 0 0 1 45 76" stroke="#C4703E" stroke-width="7" fill="none"></path>
+      <path d="M45 1 A34 34 0 0 1 45 69" stroke="#3A5A7A" stroke-width="7" fill="none"></path>
+      <path d="M45 8 A27 27 0 0 1 45 62" stroke="#6E7B47" stroke-width="7" fill="none"></path>
+      <path d="M20 14 H45 A21 21 0 0 1 45 56 H33 V86 H20 Z" fill="#F4F1E9"></path>
+      <ellipse cx="44" cy="35" rx="9" ry="8.5" fill="#123527"></ellipse>
+    </svg>
+    <div>
+      <div class="serif" style="font-size:104px;line-height:1;font-weight:700;">Palette</div>
+      <div class="mono" style="font-size:var(--body);color:var(--clay);margin-top:18px;">Your Cultural Trove</div>
+    </div>
+  </div>
+  <div style="font-size:var(--sub);color:var(--slate);margin-top:64px;max-width:1100px;line-height:1.4;">A high-taste archive for logging, curating and discovering culture across books, film, television, music, podcasts and live events.</div>
+</section>
+
+<section data-label="Problem" data-speaker-notes="Existing feeds are disposable and built for volume. People want somewhere to keep what actually moved them." style="display:flex;flex-direction:column;justify-content:center;padding:var(--py) var(--px);">
+  <div class="mono" style="font-size:var(--mono);color:var(--clay);">The problem</div>
+  <div class="serif" style="font-size:var(--title);font-weight:600;margin-top:28px;max-width:1400px;line-height:1.15;">Feeds are built to be scrolled and forgotten.</div>
+  <div style="display:flex;gap:60px;margin-top:72px;">
+    <div style="flex:1;">
+      <div class="serif" style="font-size:var(--big);color:var(--clay2);line-height:1;">5</div>
+      <div style="font-size:var(--body);color:var(--slate);margin-top:16px;line-height:1.4;">apps to track what you read, watch and listen to — none of them talking to each other</div>
+    </div>
+    <div style="flex:1;">
+      <div class="serif" style="font-size:var(--big);color:var(--olive);line-height:1;">0</div>
+      <div style="font-size:var(--body);color:var(--slate);margin-top:16px;line-height:1.4;">places that treat your taste as one library rather than five separate ones</div>
+    </div>
+    <div style="flex:1;">
+      <div class="serif" style="font-size:var(--big);color:var(--blue);line-height:1;">∞</div>
+      <div style="font-size:var(--body);color:var(--slate);margin-top:16px;line-height:1.4;">feed designed to keep you scrolling, not to help you remember</div>
+    </div>
+  </div>
+</section>
+
+<section data-label="What it is" data-speaker-notes="One sentence: Palette is a personal cultural archive that spans every medium. Log it once, keep it forever, find the next thing through people you trust." style="display:flex;flex-direction:column;justify-content:center;padding:var(--py) var(--px);background:linear-gradient(155deg,#0E3B2E 0%,#0A2419 60%,#09120E 100%);">
+  <div class="mono" style="font-size:var(--mono);color:var(--clay);">What Palette is</div>
+  <div class="serif" style="font-size:72px;font-weight:600;margin-top:32px;max-width:1500px;line-height:1.2;">One library for everything you consume — and a place to find what's next.</div>
+  <div style="font-size:var(--body);color:var(--slate);margin-top:44px;max-width:1200px;line-height:1.5;">Log a film, a novel, an album, a podcast or a gig in seconds. Keep a history you actually revisit. Discover through curators and friends, not an algorithm chasing your attention.</div>
+</section>
+
+<section data-label="Five media" data-speaker-notes="Every medium is a first-class citizen. Same logging flow, same detail depth, one combined history." style="display:flex;flex-direction:column;justify-content:center;padding:var(--py) var(--px);">
+  <div class="mono" style="font-size:var(--mono);color:var(--clay);">One archive, every medium</div>
+  <div class="serif" style="font-size:var(--title);font-weight:600;margin-top:24px;">Six things, one shelf.</div>
+  <div style="display:flex;gap:24px;margin-top:64px;">
+    <div style="flex:1;background:var(--em2);border:1px solid var(--mint);border-radius:28px 12px 24px 16px;padding:40px 30px;">
+      <div class="mono" style="font-size:var(--small);color:var(--clay);">Film</div>
+      <div class="serif" style="font-size:34px;margin-top:20px;line-height:1.2;">Cinema &amp; TV</div>
+    </div>
+    <div style="flex:1;background:var(--em2);border:1px solid var(--mint);border-radius:12px 28px 16px 24px;padding:40px 30px;">
+      <div class="mono" style="font-size:var(--small);color:var(--olive);">Print</div>
+      <div class="serif" style="font-size:34px;margin-top:20px;line-height:1.2;">Books</div>
+    </div>
+    <div style="flex:1;background:var(--em2);border:1px solid var(--mint);border-radius:24px 16px 28px 12px;padding:40px 30px;">
+      <div class="mono" style="font-size:var(--small);color:var(--blue);">Sound</div>
+      <div class="serif" style="font-size:34px;margin-top:20px;line-height:1.2;">Music &amp; Podcasts</div>
+    </div>
+    <div style="flex:1;background:var(--em2);border:1px solid var(--mint);border-radius:16px 24px 12px 28px;padding:40px 30px;">
+      <div class="mono" style="font-size:var(--small);color:var(--clay2);">Live</div>
+      <div class="serif" style="font-size:34px;margin-top:20px;line-height:1.2;">Gigs &amp; Exhibitions</div>
+    </div>
+  </div>
+</section>
+
+<section data-label="Logging" data-speaker-notes="The core loop. One button, a few taps: search the real title, rate it, choose finished or not, decide who sees it. Under ten seconds." style="display:flex;flex-direction:column;justify-content:center;padding:var(--py) var(--px);">
+  <div class="mono" style="font-size:var(--mono);color:var(--clay);">The core loop</div>
+  <div class="serif" style="font-size:var(--title);font-weight:600;margin-top:24px;max-width:1400px;line-height:1.15;">Logging is the whole point, so it takes seconds.</div>
+  <div style="display:flex;gap:0;margin-top:80px;align-items:flex-start;">
+    <div style="flex:1;padding-right:40px;">
+      <div class="serif" style="font-size:56px;color:var(--clay);">01</div>
+      <div style="font-size:var(--body);margin-top:18px;line-height:1.35;">Search the real title — covers and details load automatically</div>
+    </div>
+    <div style="width:1px;align-self:stretch;background:var(--mint);"></div>
+    <div style="flex:1;padding:0 40px;">
+      <div class="serif" style="font-size:56px;color:var(--olive);">02</div>
+      <div style="font-size:var(--body);margin-top:18px;line-height:1.35;">Rate it, add a note if you like</div>
+    </div>
+    <div style="width:1px;align-self:stretch;background:var(--mint);"></div>
+    <div style="flex:1;padding-left:40px;">
+      <div class="serif" style="font-size:56px;color:var(--blue);">03</div>
+      <div style="font-size:var(--body);margin-top:18px;line-height:1.35;">Save to your list, or keep it private — your call</div>
+    </div>
+  </div>
+</section>
+
+<section data-label="In the app" data-speaker-notes="Real screens: the feed on the left, a media detail sheet on the right — genuine artwork, ratings and actions." style="display:flex;align-items:center;gap:80px;padding:var(--py) var(--px);">
+  <div style="flex:1;">
+    <div class="mono" style="font-size:var(--mono);color:var(--clay);">In situ</div>
+    <div class="serif" style="font-size:var(--title);font-weight:600;margin-top:24px;line-height:1.14;">The feed, and a closer look.</div>
+    <div style="font-size:var(--body);color:var(--slate);margin-top:32px;max-width:560px;line-height:1.45;">Friends' logs on the left. Tap any title and the full sheet opens — real cover, the community verdict, and a one-tap save.</div>
+  </div>
+  <div style="display:flex;gap:44px;flex-shrink:0;">
+
+    <div style="width:300px;height:620px;border-radius:46px;background:#05100B;border:1px solid #1D6B54;box-shadow:0 44px 90px rgba(0,0,0,0.6);padding:13px;">
+      <div style="width:100%;height:100%;border-radius:34px;overflow:hidden;background:#09120E;position:relative;display:flex;flex-direction:column;">
+        <div style="padding:20px 18px 12px;display:flex;align-items:center;justify-content:space-between;">
+          <div class="serif" style="font-size:24px;">Feed</div>
+          <div style="width:26px;height:26px;border-radius:50%;background:#0E3B2E;border:1px solid #1D6B54;"></div>
+        </div>
+        <div style="margin:0 16px 12px;border-radius:20px 9px 17px 12px;padding:14px;background:linear-gradient(150deg,rgba(200,125,83,0.28),rgba(14,59,46,0.85));border:1px solid #C87D53;">
+          <div class="mono" style="font-size:9px;color:#F4D9C6;">Today's log</div>
+          <div class="serif" style="font-size:16px;margin-top:6px;color:#FAF8F5;">What moved you today?</div>
+        </div>
+        <div style="margin:0 16px 12px;display:flex;gap:11px;align-items:center;background:#0B1712;border:1px solid #14352a;border-radius:16px 8px 14px 10px;padding:11px;">
+          <img src="https://upload.wikimedia.org/wikipedia/en/4/45/In_the_Mood_for_Love_movie.jpg" style="width:46px;height:64px;border-radius:7px 3px 6px 4px;object-fit:cover;flex-shrink:0;background:#0E3B2E;"/>
+          <div style="min-width:0;">
+            <div class="mono" style="font-size:8px;color:#809B8E;">Niamh · Film</div>
+            <div class="serif" style="font-size:14px;color:#FAF8F5;margin-top:3px;line-height:1.15;">In the Mood for Love</div>
+            <div style="font-size:10px;color:#C87D53;margin-top:4px;letter-spacing:2px;">★★★★★</div>
+          </div>
+        </div>
+        <div style="margin:0 16px 12px;display:flex;gap:11px;align-items:center;background:#0B1712;border:1px solid #14352a;border-radius:16px 8px 14px 10px;padding:11px;">
+          <img src="https://covers.openlibrary.org/b/id/12715939-L.jpg" style="width:46px;height:64px;border-radius:7px 3px 6px 4px;object-fit:cover;flex-shrink:0;background:#0E3B2E;"/>
+          <div style="min-width:0;">
+            <div class="mono" style="font-size:8px;color:#809B8E;">William · Book</div>
+            <div class="serif" style="font-size:14px;color:#FAF8F5;margin-top:3px;line-height:1.15;">A Promised Land</div>
+            <div style="font-size:10px;color:#C87D53;margin-top:4px;letter-spacing:2px;">★★★★☆</div>
+          </div>
+        </div>
+        <div style="margin:0 16px;display:flex;gap:11px;align-items:center;background:#0B1712;border:1px solid #14352a;border-radius:16px 8px 14px 10px;padding:11px;">
+          <img src="https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/e5/24/aa/e524aacd-467b-66f3-8931-0fcd6750a4b9/08UMGIM07914.rgb.jpg/600x600bb.jpg" style="width:46px;height:46px;border-radius:6px;object-fit:cover;flex-shrink:0;background:#0E3B2E;"/>
+          <div style="min-width:0;">
+            <div class="mono" style="font-size:8px;color:#809B8E;">Ally · Vinyl</div>
+            <div class="serif" style="font-size:14px;color:#FAF8F5;margin-top:3px;line-height:1.15;">Heavy rotation</div>
+            <div style="font-size:10px;color:#C87D53;margin-top:4px;letter-spacing:2px;">★★★★★</div>
+          </div>
+        </div>
+        <div style="margin-top:auto;display:flex;justify-content:space-around;align-items:center;padding:14px 0;border-top:1px solid #14352a;background:#0B1712;">
+          <div class="mono" style="font-size:8px;color:#C87D53;">Feed</div>
+          <div class="mono" style="font-size:8px;color:#5E7568;">Friends</div>
+          <div style="width:34px;height:34px;border-radius:50%;background:#C87D53;display:flex;align-items:center;justify-content:center;color:#09120E;font-size:20px;margin-top:-6px;">+</div>
+          <div class="mono" style="font-size:8px;color:#5E7568;">Discover</div>
+          <div class="mono" style="font-size:8px;color:#5E7568;">Library</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="width:300px;height:620px;border-radius:46px;background:#05100B;border:1px solid #1D6B54;box-shadow:0 44px 90px rgba(0,0,0,0.6);padding:13px;">
+      <div style="width:100%;height:100%;border-radius:34px;overflow:hidden;background:#09120E;position:relative;">
+        <img src="https://upload.wikimedia.org/wikipedia/en/1/11/Aftersun.jpg" style="position:absolute;inset:-30px;width:calc(100% + 60px);height:60%;object-fit:cover;object-position:center 30%;filter:blur(26px) brightness(0.6) saturate(1.3);"/>
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,18,14,0.2),rgba(9,18,14,0.85) 46%,#09120E 62%);"></div>
+        <div style="position:relative;padding:26px 20px;display:flex;flex-direction:column;height:100%;box-sizing:border-box;">
+          <img src="https://upload.wikimedia.org/wikipedia/en/1/11/Aftersun.jpg" style="width:104px;height:150px;border-radius:11px 5px 9px 6px;object-fit:cover;box-shadow:0 16px 34px rgba(0,0,0,0.5);border:1px solid rgba(250,248,245,0.14);"/>
+          <div class="mono" style="font-size:9px;color:#809B8E;margin-top:18px;">Film · 2022</div>
+          <div class="serif" style="font-size:26px;color:#FAF8F5;margin-top:6px;line-height:1.1;">Aftersun</div>
+          <div style="font-size:11px;color:#809B8E;margin-top:5px;">Dir. Charlotte Wells</div>
+          <div style="margin-top:16px;display:flex;align-items:flex-end;gap:10px;">
+            <div class="serif" style="font-size:34px;color:#FAF8F5;line-height:0.9;">4.6</div>
+            <div style="padding-bottom:3px;"><div style="font-size:11px;font-weight:700;color:#C87D53;">Broad agreement</div><div style="font-size:9px;color:#809B8E;">1,420 logs</div></div>
+          </div>
+          <div style="display:flex;height:8px;border-radius:4px;overflow:hidden;margin-top:12px;border:1px solid #14352a;">
+            <div style="width:8%;background:rgba(128,155,142,0.35);"></div><div style="width:14%;background:rgba(128,155,142,0.5);"></div><div style="width:24%;background:rgba(29,107,84,0.75);"></div><div style="width:34%;background:rgba(78,140,126,0.9);"></div><div style="width:20%;background:#C87D53;"></div>
+          </div>
+          <div style="margin-top:auto;display:flex;flex-direction:column;gap:9px;">
+            <div style="text-align:center;background:#C87D53;color:#09120E;font-size:13px;font-weight:700;border-radius:18px 9px 16px 11px;padding:11px 0;">Want to watch</div>
+            <div style="text-align:center;border:1px solid #1D6B54;color:#FAF8F5;font-size:13px;font-weight:600;border-radius:18px 9px 16px 11px;padding:10px 0;">Share this</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section data-label="Library" data-speaker-notes="Your Trove: the personal library. Filter by medium, keep want-to / in-progress / done, and watch months of consumption build into a catalogue you're proud of." style="display:flex;flex-direction:column;justify-content:center;padding:var(--py) var(--px);background:linear-gradient(155deg,#0E3B2E 0%,#0A2419 60%,#09120E 100%);">
+  <div class="mono" style="font-size:var(--mono);color:var(--clay);">Your trove</div>
+  <div class="serif" style="font-size:var(--title);font-weight:600;margin-top:24px;max-width:1400px;line-height:1.15;">A catalogue of your taste, built one log at a time.</div>
+  <div style="display:flex;gap:60px;margin-top:64px;">
+    <div style="flex:1;"><div class="serif" style="font-size:var(--sub);color:var(--ala);">Filter by medium</div><div style="font-size:var(--body);color:var(--slate);margin-top:12px;line-height:1.4;">Jump between film, books, music, podcasts and events instantly.</div></div>
+    <div style="flex:1;"><div class="serif" style="font-size:var(--sub);color:var(--ala);">Track status</div><div style="font-size:var(--body);color:var(--slate);margin-top:12px;line-height:1.4;">Want to, in progress, or done — with progress on what you're mid-way through.</div></div>
+    <div style="flex:1;"><div class="serif" style="font-size:var(--sub);color:var(--ala);">See it add up</div><div style="font-size:var(--body);color:var(--slate);margin-top:12px;line-height:1.4;">A monthly mosaic turns a year of culture into something worth keeping.</div></div>
+  </div>
+</section>
+
+<section data-label="Discover" data-speaker-notes="Discovery is human-curated. Shelves with a point of view, real people to follow, and gentle charts — not an engagement-maximising algorithm." style="display:flex;flex-direction:column;justify-content:center;padding:var(--py) var(--px);">
+  <div class="mono" style="font-size:var(--mono);color:var(--clay);">Discover</div>
+  <div class="serif" style="font-size:var(--title);font-weight:600;margin-top:24px;max-width:1400px;line-height:1.15;">Taste from people, not an algorithm.</div>
+  <div style="display:flex;gap:24px;margin-top:64px;">
+    <div style="flex:1;background:var(--em2);border:1px solid var(--mint);border-radius:26px 12px 22px 16px;padding:44px 34px;">
+      <div class="serif" style="font-size:var(--sub);">Curated shelves</div>
+      <div style="font-size:var(--small);color:var(--slate);margin-top:16px;line-height:1.5;">"Scottish Cinema, Unsentimental." "Records for Four in the Morning." Shelves with an opinion.</div>
+    </div>
+    <div style="flex:1;background:var(--em2);border:1px solid var(--mint);border-radius:12px 26px 16px 22px;padding:44px 34px;">
+      <div class="serif" style="font-size:var(--sub);">People to follow</div>
+      <div style="font-size:var(--small);color:var(--slate);margin-top:16px;line-height:1.5;">Curators, critics and friends whose diet you trust — including real venues and shops.</div>
+    </div>
+    <div style="flex:1;background:var(--em2);border:1px solid var(--mint);border-radius:22px 16px 26px 12px;padding:44px 34px;">
+      <div class="serif" style="font-size:var(--sub);">Quiet charts</div>
+      <div style="font-size:var(--small);color:var(--slate);margin-top:16px;line-height:1.5;">Most-logged by day, week, month or all time — a compact rail, never a leaderboard.</div>
+    </div>
+  </div>
+</section>
+
+<section data-label="Social" data-speaker-notes="Social without the scoreboard. See what friends are into, ask the community for recommendations, but no follower-count arms race." style="display:flex;flex-direction:column;justify-content:center;padding:var(--py) var(--px);">
+  <div class="mono" style="font-size:var(--mono);color:var(--clay);">Friends &amp; Asks</div>
+  <div class="serif" style="font-size:var(--title);font-weight:600;margin-top:24px;max-width:1450px;line-height:1.15;">Social, without turning taste into a contest.</div>
+  <div style="display:flex;gap:60px;margin-top:72px;">
+    <div style="flex:1;"><div class="serif" style="font-size:var(--sub);color:var(--clay);">A friends' stream</div><div style="font-size:var(--body);color:var(--slate);margin-top:16px;line-height:1.45;">What the people you actually know have been reading, watching and hearing — logs and reviews, not clout.</div></div>
+    <div style="flex:1;"><div class="serif" style="font-size:var(--sub);color:var(--clay);">Asks</div><div style="font-size:var(--body);color:var(--slate);margin-top:16px;line-height:1.45;">Put a question to the community — "something like In the Mood for Love?" — and get real answers you can save straight to your list.</div></div>
+  </div>
+</section>
+
+<section data-label="Local" data-speaker-notes="Hyper-local curation. Real Edinburgh institutions share their current diet — the shops become tastemakers you can follow." style="display:flex;flex-direction:column;justify-content:center;padding:var(--py) var(--px);background:linear-gradient(155deg,#0E3B2E 0%,#0A2419 60%,#09120E 100%);">
+  <div class="mono" style="font-size:var(--mono);color:var(--clay);">Local curation</div>
+  <div class="serif" style="font-size:var(--title);font-weight:600;margin-top:24px;max-width:1400px;line-height:1.15;">The best curators are often down the road.</div>
+  <div style="display:flex;gap:24px;margin-top:64px;">
+    <div style="flex:1;background:var(--ob2);border:1px solid var(--mint);border-radius:24px 12px 22px 16px;padding:40px 32px;">
+      <div class="serif" style="font-size:32px;">The Portobello Bookshop</div>
+      <div class="mono" style="font-size:18px;color:var(--slate);margin-top:14px;">Staff picks, weekly</div>
+    </div>
+    <div style="flex:1;background:var(--ob2);border:1px solid var(--mint);border-radius:12px 24px 16px 22px;padding:40px 32px;">
+      <div class="serif" style="font-size:32px;">Cameo Cinema</div>
+      <div class="mono" style="font-size:18px;color:var(--slate);margin-top:14px;">35mm retrospectives</div>
+    </div>
+    <div style="flex:1;background:var(--ob2);border:1px solid var(--mint);border-radius:22px 16px 24px 12px;padding:40px 32px;">
+      <div class="serif" style="font-size:32px;">Assai Records</div>
+      <div class="mono" style="font-size:18px;color:var(--slate);margin-top:14px;">Heavy rotation, in-store</div>
+    </div>
+  </div>
+</section>
+
+<section data-label="Privacy" data-speaker-notes="Control is a feature. Log privately, go private entirely, and switch off follower/like/log counts so it never becomes a numbers game." style="display:flex;flex-direction:column;justify-content:center;padding:var(--py) var(--px);">
+  <div class="mono" style="font-size:var(--mono);color:var(--clay);">Yours to control</div>
+  <div class="serif" style="font-size:var(--title);font-weight:600;margin-top:24px;max-width:1400px;line-height:1.15;">Private by choice, at every level.</div>
+  <div style="display:flex;gap:60px;margin-top:72px;">
+    <div style="flex:1;"><div class="serif" style="font-size:var(--sub);color:var(--clay2);">Private logs</div><div style="font-size:var(--body);color:var(--slate);margin-top:14px;line-height:1.4;">Keep the guilty pleasures to yourself — off your feed and every count.</div></div>
+    <div style="flex:1;"><div class="serif" style="font-size:var(--sub);color:var(--olive);">Private profile</div><div style="font-size:var(--body);color:var(--slate);margin-top:14px;line-height:1.4;">Approve who sees your library, or keep it entirely to yourself.</div></div>
+    <div style="flex:1;"><div class="serif" style="font-size:var(--sub);color:var(--blue);">Hide the numbers</div><div style="font-size:var(--body);color:var(--slate);margin-top:14px;line-height:1.4;">Switch off follower, like and log counts so taste never becomes a contest.</div></div>
+  </div>
+</section>
+
+<section data-label="Real data" data-speaker-notes="What makes it feel alive: real covers, synopses, cast and audio previews pulled live from public sources, plus on-the-fly copy — so the archive looks and reads like the real thing." style="display:flex;flex-direction:column;justify-content:center;padding:var(--py) var(--px);background:linear-gradient(155deg,#0E3B2E 0%,#0A2419 60%,#09120E 100%);">
+  <div class="mono" style="font-size:var(--mono);color:var(--clay);">Living &amp; breathing</div>
+  <div class="serif" style="font-size:var(--title);font-weight:600;margin-top:24px;max-width:1450px;line-height:1.15;">Real artwork, real detail — not placeholders.</div>
+  <div style="display:flex;gap:60px;margin-top:64px;">
+    <div style="flex:1;"><div class="serif" style="font-size:var(--sub);">Real covers &amp; synopses</div><div style="font-size:var(--body);color:var(--slate);margin-top:14px;line-height:1.4;">Every title pulls its genuine artwork, cast, author and description from public catalogues.</div></div>
+    <div style="flex:1;"><div class="serif" style="font-size:var(--sub);">Audio previews</div><div style="font-size:var(--body);color:var(--slate);margin-top:14px;line-height:1.4;">Thirty-second clips on albums and podcasts, fetched on demand.</div></div>
+    <div style="flex:1;"><div class="serif" style="font-size:var(--sub);">Smart context</div><div style="font-size:var(--body);color:var(--slate);margin-top:14px;line-height:1.4;">"Because you liked…" reasoning written for the title in front of you.</div></div>
+  </div>
+</section>
+
+<section data-label="Billboard" data-speaker-notes="An out-of-home concept: Palette on a city billboard at dusk. The campaign line — Keep everything that moved you." style="padding:0;overflow:hidden;background:linear-gradient(180deg,#1a2740 0%,#2d3350 30%,#4a3f52 55%,#7a5a52 78%,#b5794f 100%);position:relative;">
+  <div style="position:absolute;left:0;right:0;bottom:0;height:34%;background:linear-gradient(180deg,#0a0f14 0%,#0a0f14 100%);"></div>
+  <div style="position:absolute;bottom:20%;left:0;right:0;height:22%;display:flex;align-items:flex-end;gap:22px;padding:0 60px;opacity:0.85;">
+    <div style="width:120px;height:60%;background:#10161f;"></div>
+    <div style="width:90px;height:80%;background:#0c1119;"></div>
+    <div style="width:150px;height:50%;background:#121826;"></div>
+    <div style="flex:1;"></div>
+    <div style="width:110px;height:70%;background:#0c1119;"></div>
+    <div style="width:80px;height:90%;background:#10161f;"></div>
+    <div style="width:130px;height:55%;background:#121826;"></div>
+  </div>
+
+  <div style="position:absolute;top:130px;left:200px;right:200px;">
+    <div style="background:#0B1712;border:14px solid #05100B;border-radius:14px;box-shadow:0 50px 100px rgba(0,0,0,0.55);padding:56px 64px;display:flex;align-items:center;gap:64px;background-image:radial-gradient(120% 130% at 18% 10%,#123526 0%,#0A2419 55%,#09120E 100%);">
+      <div style="flex:1;">
+        <div style="display:flex;align-items:center;gap:22px;">
+          <svg width="82" height="82" viewBox="0 0 100 100" style="filter:drop-shadow(0 0 26px rgba(200,125,83,0.45));">
+            <rect width="100" height="100" rx="26" fill="#123527"></rect>
+            <path d="M45 -6 A41 41 0 0 1 45 76" stroke="#C4703E" stroke-width="7" fill="none"></path>
+            <path d="M45 1 A34 34 0 0 1 45 69" stroke="#3A5A7A" stroke-width="7" fill="none"></path>
+            <path d="M45 8 A27 27 0 0 1 45 62" stroke="#6E7B47" stroke-width="7" fill="none"></path>
+            <path d="M20 14 H45 A21 21 0 0 1 45 56 H33 V86 H20 Z" fill="#F4F1E9"></path>
+            <ellipse cx="44" cy="35" rx="9" ry="8.5" fill="#123527"></ellipse>
+          </svg>
+          <div class="serif" style="font-size:60px;font-weight:700;color:#FAF8F5;">Palette</div>
+        </div>
+        <div class="serif" style="font-size:52px;font-weight:600;color:#FAF8F5;margin-top:36px;line-height:1.12;">Keep everything<br/>that moved you.</div>
+        <div style="font-size:24px;color:#809B8E;margin-top:26px;line-height:1.4;max-width:560px;">Books, film, music, podcasts and nights out — one archive for all of it.</div>
+        <div style="display:flex;align-items:center;gap:18px;margin-top:38px;">
+          <div style="background:#C87D53;color:#09120E;font-weight:700;font-size:20px;padding:14px 30px;border-radius:22px 11px 20px 13px;">Download on iOS</div>
+          <div class="mono" style="font-size:16px;color:#809B8E;">palette.app</div>
+        </div>
+      </div>
+      <div style="width:230px;height:470px;border-radius:38px;background:#05100B;border:1px solid #1D6B54;box-shadow:0 30px 70px rgba(0,0,0,0.5);padding:10px;flex-shrink:0;">
+        <div style="width:100%;height:100%;border-radius:30px;overflow:hidden;position:relative;background:#09120E;">
+          <img src="https://upload.wikimedia.org/wikipedia/en/4/45/In_the_Mood_for_Love_movie.jpg" style="position:absolute;inset:-24px;width:calc(100% + 48px);height:52%;object-fit:cover;object-position:center 28%;filter:blur(22px) brightness(0.6) saturate(1.3);"/>
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,18,14,0.15),rgba(9,18,14,0.85) 44%,#09120E 60%);"></div>
+          <div style="position:relative;padding:22px 18px;display:flex;flex-direction:column;height:100%;box-sizing:border-box;">
+            <img src="https://upload.wikimedia.org/wikipedia/en/4/45/In_the_Mood_for_Love_movie.jpg" style="width:88px;height:126px;border-radius:9px 4px 8px 5px;object-fit:cover;box-shadow:0 12px 26px rgba(0,0,0,0.5);"/>
+            <div class="serif" style="font-size:21px;color:#FAF8F5;margin-top:14px;line-height:1.1;">In the Mood<br/>for Love</div>
+            <div style="font-size:10px;color:#809B8E;margin-top:5px;">Dir. Wong Kar-wai</div>
+            <div style="margin-top:auto;text-align:center;background:#C87D53;color:#09120E;font-size:12px;font-weight:700;border-radius:16px 8px 14px 10px;padding:10px 0;">Save to Palette</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="width:20px;height:150px;background:linear-gradient(180deg,#3a3a42,#1a1a1f);margin:0 auto;"></div>
+  </div>
+</section>
+
+<section data-label="Close" data-speaker-notes="The one line to remember. Curate what moves you." style="display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:0 var(--px);background:radial-gradient(120% 90% at 50% 40%, #12352600 0%, #0A2419 55%, #09120E 100%);">
+  <svg width="96" height="96" viewBox="0 0 100 100" style="filter:drop-shadow(0 0 34px rgba(200,125,83,0.4));margin-bottom:48px;">
+    <rect width="100" height="100" rx="26" fill="#123527"></rect>
+    <path d="M45 -6 A41 41 0 0 1 45 76" stroke="#C4703E" stroke-width="7" fill="none"></path>
+    <path d="M45 1 A34 34 0 0 1 45 69" stroke="#3A5A7A" stroke-width="7" fill="none"></path>
+    <path d="M45 8 A27 27 0 0 1 45 62" stroke="#6E7B47" stroke-width="7" fill="none"></path>
+    <path d="M20 14 H45 A21 21 0 0 1 45 56 H33 V86 H20 Z" fill="#F4F1E9"></path>
+    <ellipse cx="44" cy="35" rx="9" ry="8.5" fill="#123527"></ellipse>
+  </svg>
+  <div class="serif" style="font-size:88px;font-weight:700;line-height:1.1;max-width:1300px;">Curate what moves you.</div>
+  <div class="mono" style="font-size:var(--body);color:var(--clay);margin-top:40px;">Palette · Your Cultural Trove</div>
+</section>
+
+</x-import>
+</x-dc>
+</body>
+</html>

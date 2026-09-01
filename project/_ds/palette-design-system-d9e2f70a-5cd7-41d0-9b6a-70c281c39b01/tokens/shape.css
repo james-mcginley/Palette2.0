@@ -1,0 +1,10 @@
+:root{
+--radius-pebble-lg:28px 12px 24px 18px;
+--radius-pebble-md:20px 10px 18px 12px;
+--radius-pebble-sm:14px 8px 12px 8px;
+--radius-pebble-inverse:12px 24px 18px 28px;
+--radius-full:9999px;
+--radius-aperture:50%;
+--border-width-hairline:1px;
+--border-width-structure:1.5px;
+}

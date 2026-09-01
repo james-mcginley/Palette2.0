@@ -1,0 +1,11 @@
+:root{
+--shadow-card:0 12px 28px -8px rgba(0,0,0,0.55),0 2px 6px rgba(0,0,0,0.35);
+--shadow-raised:0 20px 40px -12px rgba(0,0,0,0.6);
+--shadow-glow-terracotta:0 0 0 1px rgba(200,125,83,0.35),0 0 24px rgba(200,125,83,0.25);
+--shadow-glow-mint:0 0 24px rgba(29,107,84,0.35);
+--shadow-inset-carve:inset 0 2px 6px rgba(0,0,0,0.45);
+--ease-breath:cubic-bezier(0.45,0,0.55,1); /* @kind other */
+--duration-breath:3200ms; /* @kind other */
+--duration-fast:160ms; /* @kind other */
+--duration-base:240ms; /* @kind other */
+}
