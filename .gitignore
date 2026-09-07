@@ -1,0 +1,16 @@
+# Secrets — never commit these regardless of where they end up.
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Node / Expo
+node_modules/
+.expo/
+dist/
+web-build/
+
+# Supabase CLI local state
+supabase/.branches
+supabase/.temp

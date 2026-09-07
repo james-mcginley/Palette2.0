@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "Palette",
+    "slug": "palette",
+    "scheme": "palette",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "icon": "../project/icon-1024.png",
+    "splash": {
+      "backgroundColor": "#100E0C"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "bundleIdentifier": "com.palette.app",
+      "supportsTablet": false,
+      "usesAppleSignIn": true,
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "NSUserTrackingUsageDescription": "Palette does not use this. Present only if an analytics SDK is added later — remove otherwise."
+      }
+    },
+    "android": {
+      "package": "com.palette.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#100E0C"
+      }
+    },
+    "plugins": [
+      "expo-apple-authentication",
+      [
+        "expo-build-properties",
+        {
+          "ios": { "deploymentTarget": "15.1" }
+        }
+      ]
+    ]
+  }
+}
