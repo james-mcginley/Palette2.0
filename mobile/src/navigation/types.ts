@@ -35,4 +35,6 @@ export type RootStackParamList = {
   Attribution: undefined;
   Asks: undefined;
   AskDetail: { askId: string; question?: string };
+  Logbook: { jumpToIndex?: number } | undefined;
+  LogbookYear: undefined;
 };

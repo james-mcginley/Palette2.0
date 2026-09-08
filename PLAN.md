@@ -443,7 +443,42 @@ still worth taking from that doc — just not its color/type values.
     subpath, not its root — the root barrel re-exports and therefore
     bundles every weight of the font, which pulled in ~2.4MB of unused
     `.ttf` files for the one weight of each actually used.
-- [ ] Logbook A5 spread with the page-turn gesture — not started.
+- [x] Logbook A5 spread with the page-turn gesture
+  (`screens/logbook/LogbookScreen.tsx`, `components/logbook/*`,
+  `lib/api/logbook.ts`). Desk ground, dot-grid paper, taped covers rotated
+  ±1–2° per item id with a tape strip, star stamps with the "not a clean
+  glyph row" per-star jitter, and hand-written annotations pulled only from
+  the user's own review text (`components/logbook/TapedPhoto.tsx`) — never
+  a placeholder note, matching the doc's explicit rule and the same
+  never-fabricate principle already applied to Discover's curations.
+  Reached from Profile, and only shown there once ≥10 items are logged
+  ("hidden, not disabled, before that").
+  - The page turn itself: `Gesture.Pan()` driving a Reanimated shared value
+    on the UI thread into a `useAnimatedStyle`-computed `rotateY`, per the
+    doc's own explicit warning that a JS-thread implementation would drop
+    frames — perspective 1600, spine-anchored rotation, 35% completion
+    threshold, 420ms cubic-bezier easing, haptic at the 90° crossing, and a
+    reduce-motion fallback that drops the 3D transform entirely for a plain
+    fade + Prev/Next buttons.
+  - **Deliberate simplification, disclosed in the screen's own header
+    comment:** a full two-page spread turns as one rigid unit around the
+    spine, rather than one page (recto/verso) turning independently while
+    its facing page stays fixed — true book physics needs per-page
+    pre-mirrored back-face content and z-ordering across three-plus
+    simultaneous leaves at once. "One week is one flippable card" still
+    delivers every piece of physics the doc calls the actual point, without
+    that much larger, harder-to-verify 3D layout problem — unverifiable
+    here specifically, since this sandbox has no simulator to look at any
+    of this on.
+  - "Pinch-out zooms to a year view" is a tappable grid
+    (`LogbookYearScreen`) reached by a button, not an actual pinch
+    gesture — same destination (jump straight to a week), a fraction of
+    the engineering.
+  - Not implemented: the fps-based half of "below 60fps, or with
+    reduce-motion set" — only the reduce-motion branch exists; detecting
+    an actual dropped-frames condition at runtime and switching
+    mid-interaction is real scope beyond a single accessibility-setting
+    check.
 
 ## Phase 8 — Android
 

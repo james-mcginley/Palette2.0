@@ -28,6 +28,8 @@ import { PrivacyPolicyScreen } from '@/screens/PrivacyPolicyScreen';
 import { AttributionScreen } from '@/screens/AttributionScreen';
 import { AsksScreen } from '@/screens/asks/AsksScreen';
 import { AskDetailScreen } from '@/screens/asks/AskDetailScreen';
+import { LogbookScreen } from '@/screens/logbook/LogbookScreen';
+import { LogbookYearScreen } from '@/screens/logbook/LogbookYearScreen';
 import { colors } from '@/theme/tokens';
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -138,6 +140,20 @@ export function RootNavigator() {
             name="CurationBuilder"
             component={CurationBuilderScreen}
             options={{ ...modalScreenOptions, headerShown: true, title: 'Collection' }}
+          />
+          <RootStack.Screen
+            name="Logbook"
+            component={LogbookScreen}
+            // The page-turn gesture covers the whole screen, including the
+            // left edge the OS swipe-back gesture also claims — off here to
+            // avoid the two fighting over the same drag. LogbookScreen has
+            // its own "Close" affordance instead of a header back button.
+            options={{ gestureEnabled: false }}
+          />
+          <RootStack.Screen
+            name="LogbookYear"
+            component={LogbookYearScreen}
+            options={{ headerShown: true, title: 'Year', headerStyle: modalScreenOptions.headerStyle, headerTintColor: modalScreenOptions.headerTintColor }}
           />
         </>
       )}

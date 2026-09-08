@@ -62,6 +62,17 @@ export function ProfileScreen({ route, navigation }: Props) {
         </Pressable>
       </View>
 
+      {(logs?.length ?? 0) >= 10 ? (
+        // EDITORIAL_SYSTEM.md §2: "Unlocks at 10 logged items. Before that
+        // the toggle is hidden, not disabled — a greyed control invites a
+        // question you have to answer." Hidden, not a disabled row, below
+        // that count.
+        <Pressable style={styles.logbookRow} onPress={() => navigation.navigate('Logbook')}>
+          <Text style={styles.logbookLabel}>Open your Logbook</Text>
+          <Text style={styles.logbookChevron}>›</Text>
+        </Pressable>
+      ) : null}
+
       <Text style={styles.sectionTitle}>This month</Text>
       {thisMonthItems.length > 0 ? (
         <MonthlyMosaic
@@ -122,6 +133,13 @@ const styles = StyleSheet.create({
   settingsButton: { minHeight: 36, paddingHorizontal: spacing[3], borderRadius: radii.full, borderWidth: 1, borderColor: colors.borderDefault, alignItems: 'center', justifyContent: 'center' },
   settingsLabel: { ...textStyles.caption, color: colors.textSecondary },
   sectionTitle: { ...textStyles.caption, color: colors.textSecondary, textTransform: 'uppercase', letterSpacing: 1.5, marginTop: spacing[5] },
+  logbookRow: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    minHeight: 44, backgroundColor: colors.amberSoft, borderWidth: 1, borderColor: colors.amberDim,
+    borderRadius: radii.md, paddingHorizontal: spacing[4], marginTop: spacing[5],
+  },
+  logbookLabel: { ...textStyles.bodyStrong, color: colors.amber },
+  logbookChevron: { ...textStyles.headingMd, color: colors.amber },
   mosaicCover: { width: '100%', aspectRatio: 1 },
   emptyNote: { ...textStyles.bodySm, color: colors.textSecondary, marginTop: spacing[2] },
   badgeRow: { gap: spacing[2], marginTop: spacing[2] },
