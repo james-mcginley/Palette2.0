@@ -19,6 +19,7 @@ import { MediaDetailScreen } from '@/screens/media/MediaDetailScreen';
 import { QuickCaptureScreen } from '@/screens/log/QuickCaptureScreen';
 import { LogSheetScreen } from '@/screens/log/LogSheetScreen';
 import { CuratorPathsScreen } from '@/screens/curator-path/CuratorPathsScreen';
+import { CurationBuilderScreen } from '@/screens/curations/CurationBuilderScreen';
 import { CuratorPathScreen } from '@/screens/curator-path/CuratorPathScreen';
 import { CurationDetailScreen } from '@/screens/discover/CurationDetailScreen';
 import { FindPeopleScreen } from '@/screens/FindPeopleScreen';
@@ -77,7 +78,11 @@ export function RootNavigator() {
         <>
           <RootStack.Screen name="Main" component={TabNavigator} />
           <RootStack.Screen name="Mailbox" component={MailboxScreen} options={{ ...modalScreenOptions, headerShown: true, title: 'Mailbox' }} />
-          <RootStack.Screen name="Profile" component={ProfileScreen} />
+          <RootStack.Screen
+            name="Profile"
+            component={ProfileScreen}
+            options={{ headerShown: true, title: '', headerStyle: modalScreenOptions.headerStyle, headerTintColor: modalScreenOptions.headerTintColor }}
+          />
           <RootStack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: true, title: 'Settings', headerStyle: modalScreenOptions.headerStyle, headerTintColor: modalScreenOptions.headerTintColor }} />
           <RootStack.Screen name="MediaDetail" component={MediaDetailScreen} options={modalScreenOptions} />
           <RootStack.Screen name="QuickCapture" component={QuickCaptureScreen} options={modalScreenOptions} />
@@ -116,6 +121,11 @@ export function RootNavigator() {
             name="AskDetail"
             component={AskDetailScreen}
             options={{ headerShown: true, title: '', headerStyle: modalScreenOptions.headerStyle, headerTintColor: modalScreenOptions.headerTintColor }}
+          />
+          <RootStack.Screen
+            name="CurationBuilder"
+            component={CurationBuilderScreen}
+            options={{ ...modalScreenOptions, headerShown: true, title: 'Collection' }}
           />
         </>
       )}

@@ -66,6 +66,17 @@ export function LibraryScreen() {
 
   return (
     <View style={styles.root}>
+      <View style={styles.headerRow}>
+        <Text style={styles.headerTitle}>Library</Text>
+        <Pressable
+          style={styles.profileButton}
+          onPress={() => navigation.navigate('Profile', undefined)}
+          accessibilityRole="button"
+          accessibilityLabel="Your profile"
+        >
+          <Text style={styles.profileLabel}>Profile</Text>
+        </Pressable>
+      </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.pillRow}>
         {STATUS_FILTERS.map((f) => (
           <Pill key={f.key} label={f.label} active={statusFilter === f.key} onPress={() => setStatusFilter(f.key)} />
@@ -125,6 +136,13 @@ function Pill({ label, active, onPress }: { label: string; active: boolean; onPr
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.surfaceCanvas },
+  headerRow: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    paddingHorizontal: spacing[4], paddingTop: spacing[5],
+  },
+  headerTitle: { ...textStyles.displayMd, color: colors.textPrimary },
+  profileButton: { minHeight: 36, paddingHorizontal: spacing[3], borderRadius: radii.full, borderWidth: 1, borderColor: colors.borderDefault, alignItems: 'center', justifyContent: 'center' },
+  profileLabel: { ...textStyles.caption, color: colors.textSecondary },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing[6] },
   error: { ...textStyles.bodySm, color: colors.danger, textAlign: 'center' },
   emptyTitle: { ...textStyles.headingMd, color: colors.textPrimary },

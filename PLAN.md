@@ -313,13 +313,29 @@ reconnecting. ✅
 
 ## Phase 5 — Profile, Mailbox, Settings polish
 
-- Monthly Mosaic using the already-ported `MonthlyMosaic` component.
-- User-created bundles (curations) UI — schema exists.
-- Mailbox screen over `notifications` — already has real rows from the
-  new-follower and ask-answered triggers.
-- Settings: privacy toggles, blocked-users list with unblock. (No
-  theme/accent override planned — see the resolved visual-direction note
-  above; the palette is fixed, not user-configurable, per the chat.)
+- [x] Monthly Mosaic using the already-ported `MonthlyMosaic` component —
+  `ProfileScreen`'s "This month" section, fed the signed-in user's own logs
+  filtered to the current calendar month.
+- [x] User-created bundles (curations) UI — `CurationBuilderScreen`
+  (`lib/api/curations.ts`). This was the actual missing piece behind
+  Discover's editorial grid and `CurationDetailScreen` only ever rendering
+  their empty state: the schema existed since Phase 0, but nothing let a
+  user create a curation at all. Create and edit share one screen; a new
+  curation is an edit session that starts with an insert.
+- [x] Mailbox screen over `notifications` — done in Phase 3 alongside Asks
+  (real rows from the new-follower and ask-answered triggers; tapping an
+  `ask_answered` row opens `AskDetail` directly).
+- [x] Settings: blocked-users list with unblock, Terms of Use link — done in
+  Phase 3 alongside report/block. (No theme/accent override planned — see
+  the resolved visual-direction note above; the palette is fixed, not
+  user-configurable, per the chat. No separate "privacy toggles" beyond
+  blocking/`is_private` exist to expose yet.)
+- Also fixed here: `Profile` and `Settings` were both registered routes
+  nothing navigated to — added a "Profile" button to `LibraryScreen`'s
+  header and a "Settings" button on `ProfileScreen` itself. Viewing
+  someone *else's* profile (`route.params.userId`) is still a stub — it
+  needs a public-read version of every `useMy*` query here plus its own
+  empty/private-account states, which is real scope, not a quick follow-on.
 
 ## Phase 6 — App Store compliance pass
 
@@ -327,9 +343,14 @@ Everything in `COMPLIANCE.md`'s pre-submission checklist that isn't already
 done:
 
 - [x] Delete account, in-app, cascading — done in Phase 0.
-- [ ] Report flow on every public surface, 24-hour commitment stated (Phase 3)
-- [ ] Block, symmetric, with unblock list in Settings (Phase 3/5)
-- [ ] Terms of Use with the zero-tolerance clause, linked in-app
+- [x] Report flow on every public surface, 24-hour commitment stated — done
+  in Phase 3 (`ReportBlockMenu`); "every public surface" now covers all
+  three of COMPLIANCE.md's named UGC surfaces (curations, logs, Asks
+  answers).
+- [x] Block, symmetric, with unblock list in Settings — done in Phase 3.
+- [x] Terms of Use with the zero-tolerance clause, linked in-app — the link
+  and flow are real (Settings → Terms of Use); the text itself is a marked
+  placeholder pending actual legal drafting, which this pass can't do.
 - [ ] Data export, JSON (access + portability obligations)
 - [ ] Privacy policy URL, live before submission
 - [ ] Zero provider keys in the bundle — grep the release build to confirm
