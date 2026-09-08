@@ -318,9 +318,10 @@ reconnecting. ✅
 - [ ] Confetti animation on path completion — currently a plain
   `ConfirmDialog` acknowledgment naming the earned badge; the flourish is
   cosmetic polish, not core to the loop working.
-- [ ] Badge grid on Profile — blocked on `ProfileScreen` itself still being
-  a placeholder (bio, monthly mosaic, user curations all still unbuilt
-  there too), not on anything path-specific.
+- [x] Badge grid on Profile — done in Phase 5 alongside the rest of
+  `ProfileScreen` (a horizontal row of earned badges, `lib/api/badges.ts`),
+  once that screen stopped being a placeholder. Nothing left path-specific
+  to do here.
 - [ ] Seed at least one real curator path (the brief's example: "French New
   Wave and Its Aftershocks") via the SQL editor per Open Decision #2 above.
   Deliberately not done here: this sandbox has no live network access to
