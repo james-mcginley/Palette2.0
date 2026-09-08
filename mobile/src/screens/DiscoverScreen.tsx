@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
-import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, FlatList, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useMediaSearch } from '@/lib/api/mediaSearch';
+import { useDiscoverFeed } from '@/lib/api/discover';
 import { colors, radii, spacing, textStyles } from '@/theme/tokens';
 import { MediaRow } from '@/components/MediaRow';
+import { SectionHeader } from '@/components/discover/SectionHeader';
+import { DiscoverGrid } from '@/components/discover/DiscoverGrid';
 import type { RootStackParamList } from '@/navigation/types';
 
 /**
- * Live search wired to the media-search edge function — the editorial grid
- * (carousels, curator paths, ranked lists) from EDITORIAL_SYSTEM.md §1 is
- * Phase 2/4 work; this proves search end to end in the meantime.
+ * Search-as-you-type (media-search) is only half of Discover — with an
+ * empty query it shows the editorial grid instead (EDITORIAL_SYSTEM.md §1),
+ * built from real public curations rather than search results.
  */
 export function DiscoverScreen() {
   const [query, setQuery] = useState('');
@@ -23,6 +26,7 @@ export function DiscoverScreen() {
     isFetchingNextPage,
     fetchNextPage,
   } = useMediaSearch(query);
+  const feed = useDiscoverFeed();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   return (
@@ -36,51 +40,67 @@ export function DiscoverScreen() {
         autoCorrect={false}
       />
 
-      {failedProviders.length > 0 && (
+      {isQueryLongEnough && failedProviders.length > 0 && (
         <Text style={styles.warning}>
           {failedProviders.join(', ')} unavailable right now — showing what did load.
         </Text>
       )}
 
-      <FlatList
-        contentContainerStyle={styles.list}
-        data={items}
-        keyExtractor={(item) => item.id}
-        ListEmptyComponent={
-          !isLoading && isQueryLongEnough ? (
-            <Text style={styles.empty}>No results.</Text>
-          ) : null
-        }
-        renderItem={({ item }) => (
-          <MediaRow
-            title={item.title}
-            mediaType={item.mediaType}
-            creator={item.creator}
-            releaseYear={item.releaseYear}
-            rating={item.rating}
-            onPress={() => navigation.navigate('MediaDetail', { mediaId: item.id, media: item })}
-            trailingLabel="Log"
-            onPressTrailing={() => navigation.navigate('LogSheet', { media: item })}
+      {isQueryLongEnough ? (
+        <FlatList
+          contentContainerStyle={styles.list}
+          data={items}
+          keyExtractor={(item) => item.id}
+          ListEmptyComponent={!isLoading ? <Text style={styles.empty}>No results.</Text> : null}
+          renderItem={({ item }) => (
+            <MediaRow
+              title={item.title}
+              mediaType={item.mediaType}
+              creator={item.creator}
+              releaseYear={item.releaseYear}
+              rating={item.rating}
+              onPress={() => navigation.navigate('MediaDetail', { mediaId: item.id, media: item })}
+              trailingLabel="Log"
+              onPressTrailing={() => navigation.navigate('LogSheet', { media: item })}
+            />
+          )}
+          ListFooterComponent={
+            hasNextPage ? (
+              <Pressable
+                style={styles.showMore}
+                onPress={() => fetchNextPage()}
+                disabled={isFetchingNextPage}
+                accessibilityRole="button"
+                accessibilityLabel="Show more results"
+              >
+                {isFetchingNextPage ? (
+                  <ActivityIndicator color={colors.accent} />
+                ) : (
+                  <Text style={styles.showMoreLabel}>Show more results</Text>
+                )}
+              </Pressable>
+            ) : null
+          }
+        />
+      ) : (
+        <ScrollView contentContainerStyle={styles.feedContent}>
+          <SectionHeader
+            title="Community collections"
+            subtitle="Cross-media picks, built by Palette members"
           />
-        )}
-        ListFooterComponent={
-          hasNextPage ? (
-            <Pressable
-              style={styles.showMore}
-              onPress={() => fetchNextPage()}
-              disabled={isFetchingNextPage}
-              accessibilityRole="button"
-              accessibilityLabel="Show more results"
-            >
-              {isFetchingNextPage ? (
-                <ActivityIndicator color={colors.accent} />
-              ) : (
-                <Text style={styles.showMoreLabel}>Show more results</Text>
-              )}
-            </Pressable>
-          ) : null
-        }
-      />
+          {feed.isLoading ? (
+            <ActivityIndicator color={colors.accent} style={styles.spinner} />
+          ) : feed.isError ? (
+            <Text style={styles.empty}>Couldn't load Discover — pull to try again.</Text>
+          ) : feed.data && feed.data.length > 0 ? (
+            <DiscoverGrid tiles={feed.data} />
+          ) : (
+            <Text style={styles.empty}>
+              No collections yet — be the first to build one from your Library.
+            </Text>
+          )}
+        </ScrollView>
+      )}
     </View>
   );
 }
@@ -99,7 +119,9 @@ const styles = StyleSheet.create({
   },
   warning: { ...textStyles.caption, color: colors.amber },
   list: { gap: spacing[2] },
+  feedContent: { paddingBottom: spacing[8] },
   empty: { ...textStyles.bodySm, color: colors.textSecondary, textAlign: 'center', marginTop: spacing[6] },
+  spinner: { marginTop: spacing[6] },
   showMore: {
     minHeight: 44,
     borderRadius: radii.full,

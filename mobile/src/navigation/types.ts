@@ -26,4 +26,5 @@ export type RootStackParamList = {
   QuickCapture: undefined;
   LogSheet: { media: MediaItem };
   CuratorPath: { pathId: string };
+  CurationDetail: { curationId: string; title?: string };
 };

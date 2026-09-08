@@ -17,6 +17,7 @@ import { MediaDetailScreen } from '@/screens/media/MediaDetailScreen';
 import { QuickCaptureScreen } from '@/screens/log/QuickCaptureScreen';
 import { LogSheetScreen } from '@/screens/log/LogSheetScreen';
 import { CuratorPathScreen } from '@/screens/curator-path/CuratorPathScreen';
+import { CurationDetailScreen } from '@/screens/discover/CurationDetailScreen';
 import { colors } from '@/theme/tokens';
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -59,6 +60,11 @@ export function RootNavigator() {
           <RootStack.Screen name="QuickCapture" component={QuickCaptureScreen} options={modalScreenOptions} />
           <RootStack.Screen name="LogSheet" component={LogSheetScreen} options={modalScreenOptions} />
           <RootStack.Screen name="CuratorPath" component={CuratorPathScreen} />
+          <RootStack.Screen
+            name="CurationDetail"
+            component={CurationDetailScreen}
+            options={{ headerShown: true, title: '', headerStyle: modalScreenOptions.headerStyle, headerTintColor: modalScreenOptions.headerTintColor }}
+          />
         </>
       )}
     </RootStack.Navigator>

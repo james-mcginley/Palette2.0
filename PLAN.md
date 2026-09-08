@@ -196,10 +196,31 @@ reconnecting. ✅
   Includes the `.trim()` and UTF-8-safe base64 fixes from the Spotify
   `invalid_client` debugging session — **not yet re-verified against live
   Spotify credentials since those fixes deployed.**
-- [ ] Discover editorial grid from `EDITORIAL_SYSTEM.md` §1: four tile types
-  (Feature, Cross-media collection, Ranked list, Standard item), grain
-  texture canvas-rendered once (not a live SVG filter — perf hazard called
-  out explicitly in that doc).
+- [x] Discover editorial grid from `EDITORIAL_SYSTEM.md` §1: all four tile
+  types (`components/discover/{Feature,Collection,Ranked,Standard}Tile.tsx`),
+  arranged by `lib/discoverGrid.ts` per the doc's grid-rhythm rule (no tile
+  `kind` three-in-a-row). `components/Grain.tsx` replaces the web version's
+  live SVG turbulence filter with a 128×128 noise PNG
+  (`assets/textures/grain.png`, generated once by a build-time script, not
+  regenerated on device) tiled to fill each card — the doc's own performance
+  note ("do not attach a live SVG filter to a scrolling list") points at a
+  pre-rendered texture either way. No serif/espresso here, same as
+  everywhere else — amber stays editorial-chrome-only per the resolved
+  palette.
+  - Content is **real public curations only** (`curations`/`curation_items`
+    via the `visible_curations`/`visible_curation_items` views — the latter
+    needed a new RLS policy + view, `0012_visible_curation_items.sql`, since
+    0008 only ever made the curation *row* public, not its items). Nothing
+    is fabricated to fill empty space — the doc's own Logbook principle
+    ("never generate a fake handwritten note") applies just as much to
+    Discover, so a fresh database renders a genuine empty state
+    ("No collections yet…") instead of seeded placeholder picks.
+  - Added `CurationDetailScreen` (a small new screen, not in the original
+    phase notes) as the destination for tapping a Collection/Ranked tile's
+    background — without it those two tile types would be dead ends.
+  - Not done: true photographic grading (`saturate`/`contrast`/`brightness`)
+    on the Feature/Ranked tiles — approximated with a gradient scrim + amber
+    wash instead of adding a pixel-filter native dependency for one effect.
 
 ## Phase 3 — Feed + Social
 
