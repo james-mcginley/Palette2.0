@@ -24,6 +24,8 @@ import { CuratorPathScreen } from '@/screens/curator-path/CuratorPathScreen';
 import { CurationDetailScreen } from '@/screens/discover/CurationDetailScreen';
 import { FindPeopleScreen } from '@/screens/FindPeopleScreen';
 import { TermsScreen } from '@/screens/TermsScreen';
+import { PrivacyPolicyScreen } from '@/screens/PrivacyPolicyScreen';
+import { AttributionScreen } from '@/screens/AttributionScreen';
 import { AsksScreen } from '@/screens/asks/AsksScreen';
 import { AskDetailScreen } from '@/screens/asks/AskDetailScreen';
 import { colors } from '@/theme/tokens';
@@ -111,6 +113,16 @@ export function RootNavigator() {
             name="Terms"
             component={TermsScreen}
             options={{ headerShown: true, title: 'Terms of Use', headerStyle: modalScreenOptions.headerStyle, headerTintColor: modalScreenOptions.headerTintColor }}
+          />
+          <RootStack.Screen
+            name="PrivacyPolicy"
+            component={PrivacyPolicyScreen}
+            options={{ headerShown: true, title: 'Privacy Policy', headerStyle: modalScreenOptions.headerStyle, headerTintColor: modalScreenOptions.headerTintColor }}
+          />
+          <RootStack.Screen
+            name="Attribution"
+            component={AttributionScreen}
+            options={{ headerShown: true, title: 'Data & Artwork Credits', headerStyle: modalScreenOptions.headerStyle, headerTintColor: modalScreenOptions.headerTintColor }}
           />
           <RootStack.Screen
             name="Asks"

@@ -351,15 +351,34 @@ done:
 - [x] Terms of Use with the zero-tolerance clause, linked in-app — the link
   and flow are real (Settings → Terms of Use); the text itself is a marked
   placeholder pending actual legal drafting, which this pass can't do.
-- [ ] Data export, JSON (access + portability obligations)
-- [ ] Privacy policy URL, live before submission
-- [ ] Zero provider keys in the bundle — grep the release build to confirm
+- [x] Data export, JSON (access + portability obligations) — Settings →
+  "Export your data (JSON)" (`lib/api/dataExport.ts`). No edge function or
+  service role: every table read is one RLS already grants the caller full
+  access to their own rows, so this is "read what I'm allowed to read and
+  package it," not a privileged operation like delete-account is.
+  `Promise.allSettled` across the ten tables so one failing doesn't zero out
+  the rest.
+- [x] Privacy policy URL, live before submission — same situation as Terms
+  of Use: the in-app link and screen are real (Settings → Privacy Policy),
+  the text is a marked placeholder, and "live before submission" still
+  means a real hosted URL + real legal text neither of which this pass can
+  produce.
+- [x] Zero provider keys in the bundle — verified: grepped
+  `mobile/src`/`app.json`/`.env*` for all four provider key names (none
+  found), confirmed `.env.local` was never committed
+  (`git log --all -- mobile/.env.local` is empty), and `.env.example`
+  carries only the public Supabase URL/anon key with an explicit comment
+  that no provider key belongs there.
 - [ ] Privacy nutrition label matches observed behaviour
-- [ ] Attribution screen reachable from Settings (component exists, not
-      linked from anywhere yet)
+- [x] Attribution screen reachable from Settings — added `AttributionScreen`
+  (all providers, not filtered by medium — several providers' terms expect
+  their credit discoverable on its own, not only attached to one piece of
+  content) and linked it from Settings → "Data & Artwork Credits".
 - [ ] Demo account credentials prepared for the reviewer
-- [ ] `pg_cron` sweep for `search_cache` actually scheduled (commented out
-      in the migration — see `supabase/README.md`)
+- [x] `pg_cron` sweep for `search_cache` actually scheduled — ran the
+  commented-out `cron.schedule` call for real (`pg_cron` wasn't enabled on
+  this project; enabled it first). Confirmed via `select * from cron.job`:
+  `search-cache-sweep`, `0 3 * * *`, active.
 
 ## Phase 7 — Editorial polish
 

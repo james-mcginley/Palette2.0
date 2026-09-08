@@ -5,6 +5,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/state/authStore';
 import { useMyBlockedProfiles, useUnblockUser } from '@/lib/api/moderation';
+import { useExportData } from '@/lib/api/dataExport';
 import { colors, radii, spacing, textStyles } from '@/theme/tokens';
 import type { RootStackParamList } from '@/navigation/types';
 
@@ -20,6 +21,13 @@ export function SettingsScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { data: blockedProfiles, isLoading: isLoadingBlocked } = useMyBlockedProfiles();
   const unblockUser = useUnblockUser();
+  const exportData = useExportData();
+
+  const handleExportData = () => {
+    exportData.mutate(undefined, {
+      onError: (err: any) => Alert.alert("Couldn't export data", err.message ?? 'Try again in a moment.'),
+    });
+  };
 
   const handleDeleteAccount = async () => {
     if (confirmText !== 'DELETE') return;
@@ -48,6 +56,16 @@ export function SettingsScreen() {
         <Text style={styles.rowChevron}>›</Text>
       </Pressable>
 
+      <Pressable style={styles.row} onPress={() => navigation.navigate('PrivacyPolicy')}>
+        <Text style={styles.rowLabel}>Privacy Policy</Text>
+        <Text style={styles.rowChevron}>›</Text>
+      </Pressable>
+
+      <Pressable style={styles.row} onPress={() => navigation.navigate('Attribution')}>
+        <Text style={styles.rowLabel}>Data & Artwork Credits</Text>
+        <Text style={styles.rowChevron}>›</Text>
+      </Pressable>
+
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Blocked accounts</Text>
         {isLoadingBlocked ? (
@@ -71,6 +89,16 @@ export function SettingsScreen() {
           <Text style={styles.cardBody}>You haven't blocked anyone.</Text>
         )}
       </View>
+
+      <Text style={styles.sectionTitle}>Your data</Text>
+      <Pressable
+        style={[styles.row, exportData.isPending && styles.disabled]}
+        onPress={handleExportData}
+        disabled={exportData.isPending}
+      >
+        <Text style={styles.rowLabel}>Export your data (JSON)</Text>
+        {exportData.isPending ? <ActivityIndicator color={colors.accent} /> : <Text style={styles.rowChevron}>›</Text>}
+      </Pressable>
 
       <Text style={styles.sectionTitle}>Account</Text>
 
