@@ -21,6 +21,7 @@ import { LogSheetScreen } from '@/screens/log/LogSheetScreen';
 import { CuratorPathScreen } from '@/screens/curator-path/CuratorPathScreen';
 import { CurationDetailScreen } from '@/screens/discover/CurationDetailScreen';
 import { FindPeopleScreen } from '@/screens/FindPeopleScreen';
+import { TermsScreen } from '@/screens/TermsScreen';
 import { colors } from '@/theme/tokens';
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -88,6 +89,11 @@ export function RootNavigator() {
             name="FindPeople"
             component={FindPeopleScreen}
             options={{ headerShown: true, title: 'Find people', headerStyle: modalScreenOptions.headerStyle, headerTintColor: modalScreenOptions.headerTintColor }}
+          />
+          <RootStack.Screen
+            name="Terms"
+            component={TermsScreen}
+            options={{ headerShown: true, title: 'Terms of Use', headerStyle: modalScreenOptions.headerStyle, headerTintColor: modalScreenOptions.headerTintColor }}
           />
         </>
       )}

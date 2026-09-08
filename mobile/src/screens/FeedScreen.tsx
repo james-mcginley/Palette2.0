@@ -4,6 +4,7 @@ import { useFriendActivityFeed } from '@/lib/api/feed';
 import { useAuthStore } from '@/state/authStore';
 import { colors, spacing, textStyles } from '@/theme/tokens';
 import { MediaRow } from '@/components/MediaRow';
+import { ReportBlockMenu } from '@/components/moderation/ReportBlockMenu';
 
 /**
  * "Feed keeps a short run of friends' logs; the full stream is the Friends
@@ -53,6 +54,14 @@ export function FeedScreen() {
             item.user_id !== currentUserId ? item.author?.display_name ?? item.author?.handle : null,
             item.review,
           ].filter(Boolean).join(' — ')}
+          moreMenu={
+            <ReportBlockMenu
+              contentKind="log"
+              contentId={item.id}
+              authorId={item.user_id}
+              authorName={item.author?.display_name ?? item.author?.handle ?? 'this member'}
+            />
+          }
         />
       )}
     />

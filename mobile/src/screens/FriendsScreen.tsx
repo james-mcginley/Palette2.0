@@ -6,6 +6,7 @@ import { useFriendActivityStream } from '@/lib/api/feed';
 import { useAuthStore } from '@/state/authStore';
 import { colors, radii, spacing, textStyles } from '@/theme/tokens';
 import { MediaRow } from '@/components/MediaRow';
+import { ReportBlockMenu } from '@/components/moderation/ReportBlockMenu';
 import type { RootStackParamList } from '@/navigation/types';
 
 /** The full friend-activity stream — Feed shows a capped recent slice of
@@ -63,6 +64,14 @@ export function FriendsScreen() {
                 item.user_id !== currentUserId ? item.author?.display_name ?? item.author?.handle : 'You',
                 item.review,
               ].filter(Boolean).join(' — ')}
+              moreMenu={
+                <ReportBlockMenu
+                  contentKind="log"
+                  contentId={item.id}
+                  authorId={item.user_id}
+                  authorName={item.author?.display_name ?? item.author?.handle ?? 'this member'}
+                />
+              }
             />
           )}
           ListFooterComponent={isFetchingNextPage ? <ActivityIndicator color={colors.accent} style={styles.spinner} /> : null}

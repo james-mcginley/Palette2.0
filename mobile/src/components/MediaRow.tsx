@@ -19,6 +19,9 @@ interface MediaRowProps {
   trailingLabel?: string;
   onPressTrailing?: () => void;
   trailingActive?: boolean;
+  /** Slot for a ReportBlockMenu on UGC rows (Feed/Friends) — MediaRow itself
+   *  stays ignorant of moderation, the caller just drops the menu in here. */
+  moreMenu?: React.ReactNode;
 }
 
 /**
@@ -38,6 +41,7 @@ export function MediaRow({
   trailingLabel,
   onPressTrailing,
   trailingActive,
+  moreMenu,
 }: MediaRowProps) {
   const accessibilityLabel = [
     title,
@@ -85,6 +89,8 @@ export function MediaRow({
           </Text>
         </Pressable>
       ) : null}
+
+      {moreMenu}
     </View>
   );
 }

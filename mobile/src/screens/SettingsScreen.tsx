@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
-import { Alert, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/state/authStore';
+import { useMyBlockedProfiles, useUnblockUser } from '@/lib/api/moderation';
 import { colors, radii, spacing, textStyles } from '@/theme/tokens';
+import type { RootStackParamList } from '@/navigation/types';
 
 /**
  * Delete-account flow, wired for real — this is an App Store ship-blocker
@@ -13,6 +17,9 @@ import { colors, radii, spacing, textStyles } from '@/theme/tokens';
 export function SettingsScreen() {
   const [confirmText, setConfirmText] = useState('');
   const signOut = useAuthStore((s) => s.signOut);
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const { data: blockedProfiles, isLoading: isLoadingBlocked } = useMyBlockedProfiles();
+  const unblockUser = useUnblockUser();
 
   const handleDeleteAccount = async () => {
     if (confirmText !== 'DELETE') return;
@@ -33,7 +40,38 @@ export function SettingsScreen() {
   };
 
   return (
-    <View style={styles.root}>
+    <ScrollView style={styles.root} contentContainerStyle={styles.content}>
+      <Text style={styles.sectionTitle}>Privacy</Text>
+
+      <Pressable style={styles.row} onPress={() => navigation.navigate('Terms')}>
+        <Text style={styles.rowLabel}>Terms of Use</Text>
+        <Text style={styles.rowChevron}>›</Text>
+      </Pressable>
+
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>Blocked accounts</Text>
+        {isLoadingBlocked ? (
+          <ActivityIndicator color={colors.accent} />
+        ) : blockedProfiles && blockedProfiles.length > 0 ? (
+          blockedProfiles.map((b) => (
+            <View key={b.blocked_id} style={styles.blockedRow}>
+              <Text style={styles.blockedName} numberOfLines={1}>
+                {b.profile?.display_name ?? b.profile?.handle ?? 'Palette member'}
+              </Text>
+              <Pressable
+                style={styles.unblockButton}
+                onPress={() => unblockUser.mutate(b.blocked_id)}
+                disabled={unblockUser.isPending && unblockUser.variables === b.blocked_id}
+              >
+                <Text style={styles.unblockLabel}>Unblock</Text>
+              </Pressable>
+            </View>
+          ))
+        ) : (
+          <Text style={styles.cardBody}>You haven't blocked anyone.</Text>
+        )}
+      </View>
+
       <Text style={styles.sectionTitle}>Account</Text>
 
       <View style={styles.dangerCard}>
@@ -57,13 +95,34 @@ export function SettingsScreen() {
           <Text style={styles.deleteLabel}>Delete my account</Text>
         </Pressable>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.surfaceCanvas, padding: spacing[5], gap: spacing[4] },
-  sectionTitle: { ...textStyles.caption, color: colors.textSecondary, textTransform: 'uppercase', letterSpacing: 1.5 },
+  root: { flex: 1, backgroundColor: colors.surfaceCanvas },
+  content: { padding: spacing[5], gap: spacing[3] },
+  sectionTitle: { ...textStyles.caption, color: colors.textSecondary, textTransform: 'uppercase', letterSpacing: 1.5, marginTop: spacing[2] },
+  row: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    minHeight: 44, backgroundColor: colors.surfaceBase, borderWidth: 1, borderColor: colors.borderDefault,
+    borderRadius: radii.md, paddingHorizontal: spacing[4],
+  },
+  rowLabel: { ...textStyles.bodyMd, color: colors.textPrimary },
+  rowChevron: { ...textStyles.headingMd, color: colors.textDim },
+  card: {
+    backgroundColor: colors.surfaceBase, borderWidth: 1, borderColor: colors.borderDefault,
+    borderRadius: radii.md, padding: spacing[4], gap: spacing[3],
+  },
+  cardTitle: { ...textStyles.bodyStrong, color: colors.textPrimary },
+  cardBody: { ...textStyles.bodySm, color: colors.textSecondary },
+  blockedRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing[2] },
+  blockedName: { ...textStyles.bodySm, color: colors.textPrimary, flex: 1 },
+  unblockButton: {
+    minHeight: 36, paddingHorizontal: spacing[3], borderRadius: radii.full,
+    borderWidth: 1, borderColor: colors.borderDefault, alignItems: 'center', justifyContent: 'center',
+  },
+  unblockLabel: { ...textStyles.caption, color: colors.textSecondary },
   dangerCard: {
     backgroundColor: colors.surfaceBase,
     borderWidth: 1,

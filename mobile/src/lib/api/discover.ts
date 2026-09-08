@@ -78,28 +78,37 @@ export function useDiscoverFeed() {
 
 export interface CurationDetail {
   id: string;
+  user_id: string;
   title: string;
   description: string | null;
+  authorName: string;
   items: CurationItemRowRaw[];
 }
 
 async function fetchCurationDetail(curationId: string): Promise<CurationDetail> {
   const { data: curation, error: curationError } = await supabase
     .from('visible_curations')
-    .select('id, title, description')
+    .select('id, user_id, title, description')
     .eq('id', curationId)
     .single();
   if (curationError) throw curationError;
 
-  const { data: items, error: itemsError } = await supabase
-    .from('visible_curation_items')
-    .select('id, curation_id, media_id, media_type, media_snapshot, position')
-    .eq('curation_id', curationId)
-    .order('position', { ascending: true })
-    .returns<CurationItemRowRaw[]>();
+  const [{ data: items, error: itemsError }, { data: author }] = await Promise.all([
+    supabase
+      .from('visible_curation_items')
+      .select('id, curation_id, media_id, media_type, media_snapshot, position')
+      .eq('curation_id', curationId)
+      .order('position', { ascending: true })
+      .returns<CurationItemRowRaw[]>(),
+    supabase.from('profiles').select('display_name, handle').eq('id', curation.user_id).single(),
+  ]);
   if (itemsError) throw itemsError;
 
-  return { ...curation, items: items ?? [] };
+  return {
+    ...curation,
+    authorName: author?.display_name ?? author?.handle ?? 'this member',
+    items: items ?? [],
+  };
 }
 
 /** Backs CurationDetailScreen — the destination for tapping a Collection or

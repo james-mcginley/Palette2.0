@@ -256,10 +256,19 @@ reconnecting. ✅
   content yet to populate a shelf with regardless.
 - [ ] Asks: UI over `asks`/`ask_answers` (schema, RLS, and the
   answered-notification trigger already exist).
-- [ ] Report/block UI per `COMPLIANCE.md` §1 — the `⋯` action sheet on every
-  public curation/log/answer, the report-reason list, the symmetric-block
-  confirmation copy. Schema and auto-hide-at-3-reporters trigger already
-  exist; this phase is purely the client UI.
+- [x] Report/block UI per `COMPLIANCE.md` §1 — `ReportBlockMenu` is the `⋯`
+  entry point (reason list → optional detail → the required "we review
+  reports within 24 hours" copy; block gets its own destructive confirm
+  stating what it does, per the doc's exact wording). Built on two new
+  cross-platform primitives, `ActionSheet` and `ConfirmDialog` — not
+  `ActionSheetIOS`, which has no Android equivalent to fall back to later.
+  Wired into Feed/Friends log rows (via a new `moreMenu` slot on `MediaRow`)
+  and `CurationDetailScreen`'s header; Asks isn't built yet (task above) so
+  its own `⋯` waits until there's a screen to put it on. Settings → Privacy
+  now has the required unblockable blocked-list and a Terms of Use link —
+  the terms screen itself is a marked placeholder, not real legal text; it
+  exists so the link and flow are real, but shipping still needs actual
+  legal drafting.
 
 ## Phase 4 — Gamified curator paths + badges
 

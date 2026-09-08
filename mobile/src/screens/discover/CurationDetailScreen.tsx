@@ -6,6 +6,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '@/navigation/types';
 import { useCurationDetail } from '@/lib/api/discover';
 import { MediaRow } from '@/components/MediaRow';
+import { ReportBlockMenu } from '@/components/moderation/ReportBlockMenu';
 import { colors, spacing, textStyles } from '@/theme/tokens';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CurationDetail'>;
@@ -29,7 +30,17 @@ export function CurationDetailScreen({ route }: Props) {
       keyExtractor={(item) => item.id}
       ListHeaderComponent={
         <View style={styles.header}>
-          <Text style={styles.title}>{data?.title ?? title ?? 'Collection'}</Text>
+          <View style={styles.headerRow}>
+            <Text style={styles.title}>{data?.title ?? title ?? 'Collection'}</Text>
+            {data ? (
+              <ReportBlockMenu
+                contentKind="curation"
+                contentId={data.id}
+                authorId={data.user_id}
+                authorName={data.authorName}
+              />
+            ) : null}
+          </View>
           {data?.description ? <Text style={styles.description}>{data.description}</Text> : null}
         </View>
       }
@@ -63,7 +74,8 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.surfaceCanvas },
   content: { padding: spacing[4], paddingBottom: spacing[8] },
   header: { gap: spacing[2], marginBottom: spacing[4] },
-  title: { ...textStyles.displayMd, color: colors.textPrimary },
+  headerRow: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', gap: spacing[2] },
+  title: { ...textStyles.displayMd, color: colors.textPrimary, flex: 1 },
   description: { ...textStyles.bodyMd, color: colors.textSecondary },
   separator: { height: spacing[2] },
   spinner: { marginTop: spacing[6] },
