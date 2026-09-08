@@ -1,7 +1,9 @@
 import React from 'react';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { OnboardingStackParamList, RootStackParamList } from './types';
 import { useAuthStore } from '@/state/authStore';
+import { useMyProfile } from '@/lib/api/profile';
 
 import { WelcomeScreen } from '@/screens/onboarding/WelcomeScreen';
 import { ImportListsScreen } from '@/screens/onboarding/ImportListsScreen';
@@ -18,6 +20,7 @@ import { QuickCaptureScreen } from '@/screens/log/QuickCaptureScreen';
 import { LogSheetScreen } from '@/screens/log/LogSheetScreen';
 import { CuratorPathScreen } from '@/screens/curator-path/CuratorPathScreen';
 import { CurationDetailScreen } from '@/screens/discover/CurationDetailScreen';
+import { FindPeopleScreen } from '@/screens/FindPeopleScreen';
 import { colors } from '@/theme/tokens';
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -45,10 +48,26 @@ const modalScreenOptions = { presentation: 'modal' as const, headerStyle: { back
 
 export function RootNavigator() {
   const session = useAuthStore((s) => s.session);
+  // `session` alone used to gate this — which meant the moment Apple sign-in
+  // resolved on WelcomeScreen, this swapped straight to Main and the other
+  // four onboarding steps (import lists, loved titles, genres, follow
+  // people) never got a chance to render. `onboarding_completed_at` is
+  // server-side truth set once, at the end of FollowPeopleScreen, so it
+  // survives a reinstall the way a local-only flag wouldn't.
+  const { data: profile, isLoading: isProfileLoading } = useMyProfile();
+  const hasOnboarded = Boolean(profile?.onboarding_completed_at);
+
+  if (session && isProfileLoading) {
+    return (
+      <View style={styles.loading}>
+        <ActivityIndicator color={colors.accent} />
+      </View>
+    );
+  }
 
   return (
     <RootStack.Navigator screenOptions={{ headerShown: false }}>
-      {!session ? (
+      {!session || !hasOnboarded ? (
         <RootStack.Screen name="Onboarding" component={OnboardingNavigator} />
       ) : (
         <>
@@ -65,8 +84,17 @@ export function RootNavigator() {
             component={CurationDetailScreen}
             options={{ headerShown: true, title: '', headerStyle: modalScreenOptions.headerStyle, headerTintColor: modalScreenOptions.headerTintColor }}
           />
+          <RootStack.Screen
+            name="FindPeople"
+            component={FindPeopleScreen}
+            options={{ headerShown: true, title: 'Find people', headerStyle: modalScreenOptions.headerStyle, headerTintColor: modalScreenOptions.headerTintColor }}
+          />
         </>
       )}
     </RootStack.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  loading: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.surfaceCanvas },
+});

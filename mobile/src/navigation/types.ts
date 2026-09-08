@@ -27,4 +27,5 @@ export type RootStackParamList = {
   LogSheet: { media: MediaItem };
   CuratorPath: { pathId: string };
   CurationDetail: { curationId: string; title?: string };
+  FindPeople: undefined;
 };

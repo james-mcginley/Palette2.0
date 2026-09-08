@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { Alert, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import * as AppleAuthentication from 'expo-apple-authentication';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { supabase } from '@/lib/supabase';
 import { colors, radii, spacing, textStyles } from '@/theme/tokens';
+import type { OnboardingStackParamList } from '@/navigation/types';
 
 /**
  * Sign in with Apple + Google, per COMPLIANCE.md §3 — minimum scopes only
@@ -16,6 +19,7 @@ import { colors, radii, spacing, textStyles } from '@/theme/tokens';
  */
 export function WelcomeScreen() {
   const [isSigningIn, setIsSigningIn] = useState(false);
+  const navigation = useNavigation<NativeStackNavigationProp<OnboardingStackParamList>>();
 
   const handleAppleSignIn = async () => {
     setIsSigningIn(true);
@@ -47,6 +51,8 @@ export function WelcomeScreen() {
           await supabase.from('profiles').update({ display_name: displayName }).eq('id', data.user.id);
         }
       }
+
+      navigation.navigate('ImportLists');
     } catch (err: any) {
       if (err.code !== 'ERR_REQUEST_CANCELED') {
         Alert.alert('Sign in failed', err.message ?? 'Something went wrong.');

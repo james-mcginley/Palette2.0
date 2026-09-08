@@ -1,11 +1,17 @@
 import React from 'react';
-import { ScreenPlaceholder } from '@/components/ScreenPlaceholder';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { OnboardingStep } from '@/components/onboarding/OnboardingStep';
+import type { OnboardingStackParamList } from '@/navigation/types';
 
 export function PickGenresScreen() {
+  const navigation = useNavigation<NativeStackNavigationProp<OnboardingStackParamList>>();
   return (
-    <ScreenPlaceholder
+    <OnboardingStep
       title="What are you into?"
-      note="Onboarding step 3 of 4: genre/tag chips across all five media types. Selections should seed the initial Discover ranking, not just sit unused in the profile."
+      note="Genre/tag chips across all five media types should seed the initial Discover ranking rather than just sit on the profile unused — that ranking doesn't exist yet, so this step is a soft skip for now."
+      continueLabel="Skip for now"
+      onContinue={() => navigation.navigate('FollowPeople')}
     />
   );
 }

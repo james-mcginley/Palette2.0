@@ -1,18 +1,18 @@
 import React from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
-import { useMyLogs } from '@/lib/api/logs';
+import { useFriendActivityFeed } from '@/lib/api/feed';
+import { useAuthStore } from '@/state/authStore';
 import { colors, spacing, textStyles } from '@/theme/tokens';
 import { MediaRow } from '@/components/MediaRow';
 
 /**
- * The one screen in this pass wired to a real, live query rather than a
- * placeholder, to prove the data layer end to end: auth → RLS → React Query
- * → render. It renders the signed-in user's own logs (not yet the
- * friends/tastemakers feed the brief describes, which needs the follow
- * graph joined in — see PLAN.md Phase 3).
+ * "Feed keeps a short run of friends' logs; the full stream is the Friends
+ * tab" (Palette.dc.html:6910) — this is that short run: own logs plus
+ * whatever your followees have logged, capped rather than paginated.
  */
 export function FeedScreen() {
-  const { data: logs, isLoading, error } = useMyLogs();
+  const { data: logs, isLoading, error } = useFriendActivityFeed(20);
+  const currentUserId = useAuthStore((s) => s.session?.user.id);
 
   if (isLoading) {
     return (
@@ -38,8 +38,8 @@ export function FeedScreen() {
       keyExtractor={(item) => item.id}
       ListEmptyComponent={
         <View style={styles.center}>
-          <Text style={styles.emptyTitle}>Nothing logged yet</Text>
-          <Text style={styles.emptyNote}>What shaped your day today?</Text>
+          <Text style={styles.emptyTitle}>Nothing here yet</Text>
+          <Text style={styles.emptyNote}>Log something, or follow a few people from the Friends tab.</Text>
         </View>
       }
       renderItem={({ item }) => (
@@ -49,7 +49,10 @@ export function FeedScreen() {
           creator={item.media_snapshot.creator}
           releaseYear={item.media_snapshot.releaseYear}
           rating={item.rating ?? undefined}
-          metaText={item.review ?? undefined}
+          metaText={[
+            item.user_id !== currentUserId ? item.author?.display_name ?? item.author?.handle : null,
+            item.review,
+          ].filter(Boolean).join(' — ')}
         />
       )}
     />
@@ -62,5 +65,5 @@ const styles = StyleSheet.create({
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing[6] },
   error: { ...textStyles.bodySm, color: colors.danger, textAlign: 'center' },
   emptyTitle: { ...textStyles.headingMd, color: colors.textPrimary },
-  emptyNote: { ...textStyles.bodySm, color: colors.textSecondary, marginTop: spacing[1] },
+  emptyNote: { ...textStyles.bodySm, color: colors.textSecondary, marginTop: spacing[1], textAlign: 'center' },
 });

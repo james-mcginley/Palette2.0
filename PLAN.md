@@ -224,13 +224,39 @@ reconnecting. ✅
 
 ## Phase 3 — Feed + Social
 
-- Friends tab: join `follows` against `visible_logs`.
-- Feed: "Daily Vibe Anchor" prompt, friend activity, curator/tastemaker
-  shelves. Needs a decision on how tastemaker accounts are distinguished
-  from regular users (a flag on `profiles`, most likely).
-- Asks: UI over `asks`/`ask_answers` (schema, RLS, and the
+- [x] Onboarding flow was actually unreachable past step 1: `RootNavigator`
+  gated on `session` alone, which is set the instant Apple sign-in resolves
+  on `WelcomeScreen` — so it swapped straight to `Main` and steps 2-5
+  (import lists, loved titles, genres, follow people) never rendered. Fixed
+  with a real gate: `profiles.onboarding_completed_at` (`0013_...sql`, set
+  once at the end of `FollowPeopleScreen`) plus `useMyProfile()` in
+  `RootNavigator`. `ImportLists`/`PickLovedTitles`/`PickGenres` are now real,
+  navigable "soft skip" steps rather than dead-end placeholders — each still
+  needs the product decision its own placeholder note already flagged
+  before it's worth building out further.
+- [x] Follow/unfollow + user search (`lib/api/social.ts`, `UserRow`,
+  `PeopleSearchList`) — backs both `FollowPeopleScreen` and a new
+  `FindPeopleScreen` reached from the Friends tab.
+- [x] Friends tab: join `follows` against `visible_logs`
+  (`lib/api/feed.ts` — `useFriendActivityStream`, paginated). Feed shows a
+  capped recent slice of the same query (`useFriendActivityFeed`), per
+  "Feed keeps a short run of friends' logs; the full stream is the Friends
+  tab" (Palette.dc.html:6910).
+  - This surfaced that 'friends' visibility was a silent no-op: 0005/0008's
+    `visible_logs`/`visible_curations` only ever filtered `visibility =
+    'public'`, so a 'friends'-tier log was reachable by nobody but its
+    author despite 0002's own comment saying the view would enforce it.
+    Fixed in `0014_friends_visibility.sql` — the RLS policy now also admits
+    a 'friends'-visibility row to the author's followers, and both views
+    collapsed to a plain `select *` now that RLS (not the view's own WHERE)
+    is the single source of truth for who can see what.
+- [ ] Feed: "Daily Vibe Anchor" prompt, curator/tastemaker shelves. Still
+  needs the tastemaker-vs-regular-user decision (a flag on `profiles`, most
+  likely) — deferred rather than guessed, and there's no real tastemaker
+  content yet to populate a shelf with regardless.
+- [ ] Asks: UI over `asks`/`ask_answers` (schema, RLS, and the
   answered-notification trigger already exist).
-- Report/block UI per `COMPLIANCE.md` §1 — the `⋯` action sheet on every
+- [ ] Report/block UI per `COMPLIANCE.md` §1 — the `⋯` action sheet on every
   public curation/log/answer, the report-reason list, the symmetric-block
   confirmation copy. Schema and auto-hide-at-3-reporters trigger already
   exist; this phase is purely the client UI.
