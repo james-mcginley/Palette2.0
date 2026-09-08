@@ -121,7 +121,7 @@ export function registerLogMutationDefaults(queryClient: QueryClient): void {
         created_at: new Date().toISOString(),
       };
 
-      queryClient.setQueryData<LogRow[]>(queryKey, (old) => [optimisticRow, ...(old ?? [])]);
+      queryClient.setQueryData<LogRow[]>(queryKey, (old: LogRow[] | undefined) => [optimisticRow, ...(old ?? [])]);
 
       return { userId, previousLogs };
     },

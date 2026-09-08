@@ -12,6 +12,26 @@ third-party media data (TMDB/Spotify/Google Books/Apple/Open Library)
 proxied server-side. See `project/handoff/ARCHITECTURE.md` for the reasoning
 behind each of these — this plan doesn't re-litigate them.
 
+## Critical fix: the app could not build at all until this pass
+
+`npx expo export` had never been run against this repo before — every prior
+pass verified with `tsc --noEmit` only, which cannot catch this. The six
+audio-cue `require()` calls in `logging.shared.ts` and `mediaInteractions.ts`
+pointed at `.mp3` files that were never added (documented as a known gap,
+with a comment claiming the surrounding `tryRequire`/`safeRequire` try/catch
+would degrade missing files to haptics-only). That assumption was wrong:
+Metro resolves a local asset `require()` at bundle time, not at the call
+site, so a missing file fails the *entire* bundle before any JS — including
+that try/catch — ever runs. Fixed by generating six short synthesized
+placeholder tones as real `.wav` files under `mobile/src/assets/audio/`
+(real cues can replace them later, same filenames) — see that directory's
+README. Also fixed in the same pass: two real `tsc` errors
+(`InterruptionModeAndroid`/`InterruptionModeIOS` imported from the wrong
+place, an implicit-`any` callback param) that had been sitting alongside
+every commit's typecheck output this whole project. `npm run typecheck` and
+`npx expo export --platform ios` are both clean as of this commit — the
+first time either has been true.
+
 ## What exists after this pass (Phase 0)
 
 - `supabase/migrations/*.sql` — full schema: profiles, follows, logs,

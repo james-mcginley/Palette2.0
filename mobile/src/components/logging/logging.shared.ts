@@ -5,8 +5,16 @@
  * The only change is the `require` paths for the audio cues: this file
  * moved from handoff/src/components/logging/ to mobile/src/components/logging/,
  * two directories above mobile/src/assets/audio/ instead of three above
- * handoff/assets/audio/. The .mp3 files themselves still need adding —
- * `tryRequire` degrades to haptics-only until then.
+ * handoff/assets/audio/.
+ *
+ * The cue files are short synthesized placeholder tones (see
+ * src/assets/audio/README.md), not real sound design — a real cue file for
+ * each name can drop in later with no code change. They exist at all
+ * because `tryRequire`'s try/catch cannot save a missing one: Metro
+ * resolves a local asset `require()` at bundle time, not at the call site,
+ * so a missing file fails the entire bundle before any JS — including this
+ * try/catch — ever runs. That was the previous state here, and it meant
+ * the app could not build at all.
  *
  * Each Log component is standalone in behaviour but pulls its palette and its
  * sound plumbing from here, so six components don't restate the same six
@@ -57,12 +65,12 @@ export type LogCue =
   | 'typewriter_press';
 
 const CUES: Record<LogCue, AVPlaybackSource | undefined> = {
-  page_turn: tryRequire(() => require('../../assets/audio/page_turn.mp3')),
-  ticket_punch: tryRequire(() => require('../../assets/audio/ticket_punch.mp3')),
-  dial_click: tryRequire(() => require('../../assets/audio/dial_click.mp3')),
-  needle_drop: tryRequire(() => require('../../assets/audio/needle_drop.mp3')),
-  stamp_thud: tryRequire(() => require('../../assets/audio/stamp_thud.mp3')),
-  typewriter_press: tryRequire(() => require('../../assets/audio/typewriter_press.mp3')),
+  page_turn: tryRequire(() => require('../../assets/audio/page_turn.wav')),
+  ticket_punch: tryRequire(() => require('../../assets/audio/ticket_punch.wav')),
+  dial_click: tryRequire(() => require('../../assets/audio/dial_click.wav')),
+  needle_drop: tryRequire(() => require('../../assets/audio/needle_drop.wav')),
+  stamp_thud: tryRequire(() => require('../../assets/audio/stamp_thud.wav')),
+  typewriter_press: tryRequire(() => require('../../assets/audio/typewriter_press.wav')),
 };
 
 function tryRequire(fn: () => AVPlaybackSource): AVPlaybackSource | undefined {

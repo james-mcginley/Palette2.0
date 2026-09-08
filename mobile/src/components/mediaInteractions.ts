@@ -4,9 +4,14 @@
  * Ported verbatim (behavior unchanged) from
  * project/handoff/src/utils/mediaInteractions.ts, with only the audio
  * `require` paths adjusted for this file's new location under
- * mobile/src/components/. The .mp3 files themselves are not in this repo
- * yet — `safeRequire` degrades to haptics-only until they're added under
- * mobile/src/assets/audio/, so nothing here throws in the meantime.
+ * mobile/src/components/. The cue files under mobile/src/assets/audio/ are
+ * short synthesized placeholders (see that directory's README), not real
+ * sound design — but they have to exist as real files: `safeRequire`'s
+ * try/catch only protects runtime playback failures, and cannot rescue a
+ * `require()` pointed at a file that doesn't exist, since Metro resolves a
+ * local asset require at bundle time, before any of this code runs. A
+ * missing file here previously failed the whole app's bundle, not just
+ * this cue.
  *
  * Every media type gets its own logging gesture — a shelf slide for books, a
  * ticket punch for films, a needle drop for records. Each combines a haptic
@@ -33,7 +38,7 @@
 
 import { Platform } from 'react-native';
 import * as Haptics from 'expo-haptics';
-import { Audio, type AVPlaybackSource } from 'expo-av';
+import { Audio, InterruptionModeAndroid, InterruptionModeIOS, type AVPlaybackSource } from 'expo-av';
 import {
   Easing,
   withDelay,
@@ -265,12 +270,12 @@ const RECIPES: Record<EffectKey, {
  * ------------------------------------------------------------------ */
 
 const SOURCES: Record<string, AVPlaybackSource | undefined> = {
-  page_turn: safeRequire(() => require('../assets/audio/page_turn.mp3')),
-  ticket_punch: safeRequire(() => require('../assets/audio/ticket_punch.mp3')),
-  dial_click: safeRequire(() => require('../assets/audio/dial_click.mp3')),
-  needle_drop: safeRequire(() => require('../assets/audio/needle_drop.mp3')),
-  stamp_thud: safeRequire(() => require('../assets/audio/stamp_thud.mp3')),
-  typewriter_press: safeRequire(() => require('../assets/audio/typewriter_press.mp3')),
+  page_turn: safeRequire(() => require('../assets/audio/page_turn.wav')),
+  ticket_punch: safeRequire(() => require('../assets/audio/ticket_punch.wav')),
+  dial_click: safeRequire(() => require('../assets/audio/dial_click.wav')),
+  needle_drop: safeRequire(() => require('../assets/audio/needle_drop.wav')),
+  stamp_thud: safeRequire(() => require('../assets/audio/stamp_thud.wav')),
+  typewriter_press: safeRequire(() => require('../assets/audio/typewriter_press.wav')),
 };
 
 function safeRequire(fn: () => AVPlaybackSource): AVPlaybackSource | undefined {
@@ -292,8 +297,8 @@ async function configureAudioMode(): Promise<void> {
       playsInSilentModeIOS: false,
       staysActiveInBackground: false,
       shouldDuckAndroid: true,
-      interruptionModeAndroid: Audio.InterruptionModeAndroid.DuckOthers,
-      interruptionModeIOS: Audio.InterruptionModeIOS.MixWithOthers,
+      interruptionModeAndroid: InterruptionModeAndroid.DuckOthers,
+      interruptionModeIOS: InterruptionModeIOS.MixWithOthers,
     });
   } catch {
     /* Non-fatal: playback may still work, and haptics are unaffected. */
