@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -19,6 +19,9 @@ import type { OnboardingStackParamList } from '@/navigation/types';
  */
 export function WelcomeScreen() {
   const [isSigningIn, setIsSigningIn] = useState(false);
+  const [devEmail, setDevEmail] = useState('');
+  const [devPassword, setDevPassword] = useState('');
+  const [isDevAuthing, setIsDevAuthing] = useState(false);
   const navigation = useNavigation<NativeStackNavigationProp<OnboardingStackParamList>>();
 
   const handleAppleSignIn = async () => {
@@ -62,6 +65,42 @@ export function WelcomeScreen() {
     }
   };
 
+  /**
+   * Dev-only email/password auth, gated by `__DEV__` so it's stripped from
+   * release builds entirely — not a real sign-in method, just a way to get
+   * past this screen without an Apple Developer account + dev build, which
+   * `expo-apple-authentication` needs (it isn't available in plain Expo Go).
+   * Needs "Confirm email" off in Supabase → Authentication → Providers →
+   * Email for sign-up to return a session immediately; otherwise it queues
+   * a confirmation email and there's nothing to sign in with until that's
+   * clicked.
+   */
+  const handleDevAuth = async (mode: 'signUp' | 'signIn') => {
+    if (!devEmail || !devPassword) return;
+    setIsDevAuthing(true);
+    try {
+      const { data, error } =
+        mode === 'signUp'
+          ? await supabase.auth.signUp({ email: devEmail, password: devPassword })
+          : await supabase.auth.signInWithPassword({ email: devEmail, password: devPassword });
+      if (error) throw error;
+
+      if (!data.session) {
+        Alert.alert(
+          'Check your email',
+          'Account created but needs confirming before it has a session. For local testing, turn off "Confirm email" in Supabase → Authentication → Providers → Email, then use Sign in with the same credentials.'
+        );
+        return;
+      }
+
+      navigation.navigate('ImportLists');
+    } catch (err: any) {
+      Alert.alert('Dev sign-in failed', err.message ?? 'Something went wrong.');
+    } finally {
+      setIsDevAuthing(false);
+    }
+  };
+
   return (
     <View style={styles.root}>
       <View style={styles.hero}>
@@ -87,6 +126,48 @@ export function WelcomeScreen() {
         >
           <Text style={styles.googleLabel}>Continue with Google</Text>
         </Pressable>
+
+        {__DEV__ && (
+          <View style={styles.devBlock}>
+            <Text style={styles.devLabel}>Dev sign-in — testing only, stripped from release builds</Text>
+            <TextInput
+              style={styles.devInput}
+              placeholder="email"
+              placeholderTextColor={colors.textDim}
+              value={devEmail}
+              onChangeText={setDevEmail}
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="email-address"
+            />
+            <TextInput
+              style={styles.devInput}
+              placeholder="password"
+              placeholderTextColor={colors.textDim}
+              value={devPassword}
+              onChangeText={setDevPassword}
+              autoCapitalize="none"
+              autoCorrect={false}
+              secureTextEntry
+            />
+            <View style={styles.devButtonRow}>
+              <Pressable
+                style={[styles.devButton, isDevAuthing && styles.disabled]}
+                disabled={isDevAuthing}
+                onPress={() => handleDevAuth('signUp')}
+              >
+                <Text style={styles.devButtonLabel}>Sign up</Text>
+              </Pressable>
+              <Pressable
+                style={[styles.devButton, isDevAuthing && styles.disabled]}
+                disabled={isDevAuthing}
+                onPress={() => handleDevAuth('signIn')}
+              >
+                <Text style={styles.devButtonLabel}>Sign in</Text>
+              </Pressable>
+            </View>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -109,4 +190,32 @@ const styles = StyleSheet.create({
   },
   googleLabel: { ...textStyles.bodyStrong, color: colors.textPrimary },
   disabled: { opacity: 0.5 },
+  devBlock: {
+    marginTop: spacing[4],
+    paddingTop: spacing[4],
+    borderTopWidth: 1,
+    borderTopColor: colors.borderSoft,
+    gap: spacing[2],
+  },
+  devLabel: { ...textStyles.caption, color: colors.amber, textAlign: 'center' },
+  devInput: {
+    height: 44,
+    borderRadius: radii.sm,
+    borderWidth: 1,
+    borderColor: colors.borderDefault,
+    paddingHorizontal: spacing[3],
+    color: colors.textPrimary,
+    ...textStyles.bodySm,
+  },
+  devButtonRow: { flexDirection: 'row', gap: spacing[2] },
+  devButton: {
+    flex: 1,
+    height: 44,
+    borderRadius: radii.full,
+    borderWidth: 1,
+    borderColor: colors.borderDefault,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  devButtonLabel: { ...textStyles.bodyStrong, color: colors.textSecondary },
 });
