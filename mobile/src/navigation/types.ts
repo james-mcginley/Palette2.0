@@ -25,6 +25,7 @@ export type RootStackParamList = {
   MediaDetail: { mediaId: string; media?: MediaItem };
   QuickCapture: undefined;
   LogSheet: { media: MediaItem };
+  CuratorPaths: undefined;
   CuratorPath: { pathId: string };
   CurationDetail: { curationId: string; title?: string };
   FindPeople: undefined;

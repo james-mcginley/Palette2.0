@@ -285,13 +285,31 @@ reconnecting. ✅
 
 ## Phase 4 — Gamified curator paths + badges
 
-- Snake-path UI over `curator_path_nodes` + `user_path_progress`.
-  `start_curator_path()` and `advance_curator_path_node()` already exist and
-  are atomic (progress + badge award in one transaction, sequential-only —
-  see `0009_curator_path_progress_rpcs.sql`) — this phase is UI only.
-- Confetti animation, badge grid on Profile.
-- Seed at least one real curator path (the brief's example: "French New Wave
-  and Its Aftershocks") via the SQL editor per Open Decision #2 above.
+- [x] Snake-path UI over `curator_path_nodes` + `user_path_progress`
+  (`CuratorPathsScreen` browse list, `CuratorPathScreen` detail).
+  `start_curator_path()` and `advance_curator_path_node()` already existed
+  and are atomic (progress + badge award in one transaction, sequential-only
+  — `0009_curator_path_progress_rpcs.sql`) — the UI is a thin wrapper by
+  design: node position/lock state is derived straight from
+  `user_path_progress.current_node_position` rather than re-deriving
+  "is this node unlocked" client-side, since the RPC is the only thing that
+  can actually make that true. Reached from Discover (same "own screen
+  instead of a filter chip" pattern as Asks/Paths in the design's IA).
+- [ ] Confetti animation on path completion — currently a plain
+  `ConfirmDialog` acknowledgment naming the earned badge; the flourish is
+  cosmetic polish, not core to the loop working.
+- [ ] Badge grid on Profile — blocked on `ProfileScreen` itself still being
+  a placeholder (bio, monthly mosaic, user curations all still unbuilt
+  there too), not on anything path-specific.
+- [ ] Seed at least one real curator path (the brief's example: "French New
+  Wave and Its Aftershocks") via the SQL editor per Open Decision #2 above.
+  Deliberately not done here: this sandbox has no live network access to
+  TMDB/Spotify/etc. to verify real provider ids against, and
+  `curator_path_nodes.media_refs` is meant to carry a real, checkable
+  snapshot (per the same "never fabricate content" principle applied to
+  Discover's curations) — better done by whoever can verify the picks
+  against a live provider than guessed here. `CuratorPathsScreen`'s empty
+  state says as much.
 
 ## Phase 5 — Profile, Mailbox, Settings polish
 

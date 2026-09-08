@@ -18,6 +18,7 @@ import { SettingsScreen } from '@/screens/SettingsScreen';
 import { MediaDetailScreen } from '@/screens/media/MediaDetailScreen';
 import { QuickCaptureScreen } from '@/screens/log/QuickCaptureScreen';
 import { LogSheetScreen } from '@/screens/log/LogSheetScreen';
+import { CuratorPathsScreen } from '@/screens/curator-path/CuratorPathsScreen';
 import { CuratorPathScreen } from '@/screens/curator-path/CuratorPathScreen';
 import { CurationDetailScreen } from '@/screens/discover/CurationDetailScreen';
 import { FindPeopleScreen } from '@/screens/FindPeopleScreen';
@@ -81,7 +82,16 @@ export function RootNavigator() {
           <RootStack.Screen name="MediaDetail" component={MediaDetailScreen} options={modalScreenOptions} />
           <RootStack.Screen name="QuickCapture" component={QuickCaptureScreen} options={modalScreenOptions} />
           <RootStack.Screen name="LogSheet" component={LogSheetScreen} options={modalScreenOptions} />
-          <RootStack.Screen name="CuratorPath" component={CuratorPathScreen} />
+          <RootStack.Screen
+            name="CuratorPaths"
+            component={CuratorPathsScreen}
+            options={{ headerShown: true, title: 'Curator paths', headerStyle: modalScreenOptions.headerStyle, headerTintColor: modalScreenOptions.headerTintColor }}
+          />
+          <RootStack.Screen
+            name="CuratorPath"
+            component={CuratorPathScreen}
+            options={{ headerShown: true, title: '', headerStyle: modalScreenOptions.headerStyle, headerTintColor: modalScreenOptions.headerTintColor }}
+          />
           <RootStack.Screen
             name="CurationDetail"
             component={CurationDetailScreen}

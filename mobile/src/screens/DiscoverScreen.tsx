@@ -42,6 +42,14 @@ export function DiscoverScreen() {
         />
         <Pressable
           style={styles.asksButton}
+          onPress={() => navigation.navigate('CuratorPaths')}
+          accessibilityRole="button"
+          accessibilityLabel="Curator paths"
+        >
+          <Text style={styles.asksLabel}>Paths</Text>
+        </Pressable>
+        <Pressable
+          style={styles.asksButton}
           onPress={() => navigation.navigate('Asks')}
           accessibilityRole="button"
           accessibilityLabel="Asks"
