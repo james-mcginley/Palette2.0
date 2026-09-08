@@ -412,6 +412,39 @@ resolved palette (`theme/tokens.ts` — green/black/Roboto), **not**
 rejected. Grain texture, taped-photo rotation, and page-turn physics are
 still worth taking from that doc — just not its color/type values.
 
+- [x] Cold-launch entry animation, "the polaroid draw"
+  (`components/entry/EntryAnimation.tsx`) — dark→draw→settle→spread on the
+  5 most recently logged covers, skippable on any touch, reduce-motion
+  collapses to a 200ms fade, a safety timer covers a backgrounded-mid-
+  sequence edge case, and a brand-new account with zero logs skips straight
+  to Feed rather than animating nothing. `state/entryAnimationStore.ts`'s
+  module-level (unpersisted) flag is what makes this cold-launch-only:
+  it resets on process restart and nowhere else, exactly matching "warm
+  resume goes straight to the feed." One deliberate simplification: "cards
+  fan into their feed positions" is fan-and-fade, not a FLIP animation into
+  each card's real future FlatList row coordinates — that's substantially
+  more engineering for a once-per-cold-launch flourish. The doc's separate
+  "interactive rest state" (drag-to-discard the top card, tilt parallax,
+  long-press lift) is a persistent Feed interaction model, not part of the
+  entry sequence — not built.
+  - Found and fixed while building this: `theme/tokens.ts` names
+    `fontFamily: 'Roboto'`/`'RobotoMono'`/`'Caveat'` everywhere, but no
+    `expo-font` `useFonts()` call anywhere in the app ever actually loaded
+    them — every screen has been silently rendering in the OS system font
+    this whole project. Left Roboto alone (see `App.tsx`'s comment for why:
+    iOS's silent fallback to San Francisco currently respects `fontWeight`
+    correctly, and a custom-loaded "Roboto" wouldn't, since custom fonts on
+    iOS need one distinct family name per weight — fixing that properly
+    means touching every weight in `textStyles`, unverified, across the
+    whole app). Loaded only `RobotoMono` and `Caveat`, the two faces this
+    app uses at exactly one weight each and that a system font can't
+    substitute for (a true monospace stamp face; a handwritten annotation
+    face the Logbook depends on). Imported from each package's per-weight
+    subpath, not its root — the root barrel re-exports and therefore
+    bundles every weight of the font, which pulled in ~2.4MB of unused
+    `.ttf` files for the one weight of each actually used.
+- [ ] Logbook A5 spread with the page-turn gesture — not started.
+
 ## Phase 8 — Android
 
 Deferred by design (`ARCHITECTURE.md` §1: "Android is wanted eventually;

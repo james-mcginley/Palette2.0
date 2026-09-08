@@ -46,6 +46,7 @@ export const colors = {
   dangerSoft: 'rgba(196,82,62,0.16)',
 
   // Paper ramp — logbook / A5-spread surfaces only.
+  deskGround: '#1C1815',
   paper: '#F4F1EA',
   paperShade: '#E7E1D5',
   paperLine: 'rgba(90,74,58,0.13)',
