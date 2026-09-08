@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import type { MediaItem } from '@/lib/types/media';
@@ -58,4 +58,30 @@ export function useMediaSearch(rawQuery: string) {
   );
 
   return { ...result, items, failedProviders, isQueryLongEnough };
+}
+
+async function fetchMediaDetail(mediaId: string): Promise<MediaItem | null> {
+  const { data, error } = await supabase.functions.invoke<{ item: MediaItem }>('media-detail', {
+    body: { mediaId },
+  });
+  if (error) throw error;
+  return data?.item ?? null;
+}
+
+/**
+ * Fetches one MediaItem by id from the media-detail edge function.
+ *
+ * `initialData` lets a caller that already has a full snapshot (a search
+ * result, an existing log) skip the round-trip entirely — the query only
+ * hits the network when a screen is opened from something that carried
+ * nothing but an id (a badge, a curator-path node, a bare library reference).
+ */
+export function useMediaDetail(mediaId: string, initialData?: MediaItem) {
+  return useQuery({
+    queryKey: ['media-detail', mediaId],
+    queryFn: () => fetchMediaDetail(mediaId),
+    initialData,
+    enabled: Boolean(mediaId),
+    staleTime: 30 * 60_000,
+  });
 }

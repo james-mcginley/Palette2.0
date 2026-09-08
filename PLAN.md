@@ -176,19 +176,30 @@ reconnecting. ✅
 
 ## Phase 2 — Search + Discover
 
-- Wire Open Library into `media-search` (adapter already exists in
-  `normalizeMedia.ts`, just not called) as a Google Books fallback/alternate.
-- Add TVmaze and Wikipedia enrichment for TV/film synopsis — referenced by
-  `AttributionFooter`'s provider list but no adapter exists yet for either.
-- `useInfiniteQuery` pagination is already in `useMediaSearch`; add the
-  "Show more results" button UI (`ARCHITECTURE.md` §9 — deliberately not
-  auto-loading).
-- Discover editorial grid from `EDITORIAL_SYSTEM.md` §1: four tile types
+- [x] Wire Open Library into `media-search` (adapter already existed in
+  `normalizeMedia.ts`, just not called) as a Google Books fallback/alternate
+  — runs in parallel via the same `allSettled` fan-out, merged/deduped by
+  `mergeResults`.
+- [x] Add TVmaze and Wikipedia enrichment for TV/film synopsis — referenced
+  by `AttributionFooter`'s provider list but no adapter existed yet for
+  either. Capped at 3 calls per medium per search, never fails the request.
+- [x] `useInfiniteQuery` pagination is already in `useMediaSearch`; added
+  the "Show more results" button UI (`ARCHITECTURE.md` §9 — deliberately not
+  auto-loading) to `DiscoverScreen`.
+- [x] `media-detail` edge function + `useMediaDetail` query, so
+  `MediaDetailScreen` can open from something other than a search result or
+  an existing log — a passed-in snapshot is used as `initialData` so those
+  paths still render with zero network round-trip.
+- [x] Shared `_shared/providerAuth.ts`: TMDB/Spotify/Google secret reads and
+  Spotify's client-credentials token exchange, split out of `media-search` so
+  `media-detail` doesn't duplicate (and risk drifting from) the same logic.
+  Includes the `.trim()` and UTF-8-safe base64 fixes from the Spotify
+  `invalid_client` debugging session — **not yet re-verified against live
+  Spotify credentials since those fixes deployed.**
+- [ ] Discover editorial grid from `EDITORIAL_SYSTEM.md` §1: four tile types
   (Feature, Cross-media collection, Ranked list, Standard item), grain
   texture canvas-rendered once (not a live SVG filter — perf hazard called
   out explicitly in that doc).
-- `media-detail` edge function + query, so `MediaDetailScreen` can open from
-  something other than a search result or an existing log.
 
 ## Phase 3 — Feed + Social
 

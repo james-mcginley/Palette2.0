@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useMediaSearch } from '@/lib/api/mediaSearch';
-import { colors, spacing, textStyles } from '@/theme/tokens';
+import { colors, radii, spacing, textStyles } from '@/theme/tokens';
 import { MediaRow } from '@/components/MediaRow';
 import type { RootStackParamList } from '@/navigation/types';
 
@@ -14,7 +14,15 @@ import type { RootStackParamList } from '@/navigation/types';
  */
 export function DiscoverScreen() {
   const [query, setQuery] = useState('');
-  const { items, failedProviders, isLoading, isQueryLongEnough } = useMediaSearch(query);
+  const {
+    items,
+    failedProviders,
+    isLoading,
+    isQueryLongEnough,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useMediaSearch(query);
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   return (
@@ -55,6 +63,23 @@ export function DiscoverScreen() {
             onPressTrailing={() => navigation.navigate('LogSheet', { media: item })}
           />
         )}
+        ListFooterComponent={
+          hasNextPage ? (
+            <Pressable
+              style={styles.showMore}
+              onPress={() => fetchNextPage()}
+              disabled={isFetchingNextPage}
+              accessibilityRole="button"
+              accessibilityLabel="Show more results"
+            >
+              {isFetchingNextPage ? (
+                <ActivityIndicator color={colors.accent} />
+              ) : (
+                <Text style={styles.showMoreLabel}>Show more results</Text>
+              )}
+            </Pressable>
+          ) : null
+        }
       />
     </View>
   );
@@ -75,4 +100,15 @@ const styles = StyleSheet.create({
   warning: { ...textStyles.caption, color: colors.amber },
   list: { gap: spacing[2] },
   empty: { ...textStyles.bodySm, color: colors.textSecondary, textAlign: 'center', marginTop: spacing[6] },
+  showMore: {
+    minHeight: 44,
+    borderRadius: radii.full,
+    borderWidth: 1,
+    borderColor: colors.borderDefault,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: spacing[3],
+    marginBottom: spacing[5],
+  },
+  showMoreLabel: { ...textStyles.bodyStrong, color: colors.accent },
 });

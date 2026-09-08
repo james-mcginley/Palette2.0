@@ -6,86 +6,66 @@
  * the reasoning behind each decision here (auth-gated, allSettled not all,
  * shared Postgres cache, no provider key ever reaching the client).
  *
- * Secrets (set via `supabase secrets set`, never committed):
- *   TMDB_API_KEY, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, GOOGLE_BOOKS_KEY
+ * Secrets (set via the Supabase dashboard or `supabase secrets set`, never
+ * committed): TMDB_API_KEY, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET,
+ * GOOGLE_BOOKS_KEY — read once in _shared/providerAuth.ts.
  */
 
 import { serve } from 'https://deno.land/std@0.208.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { normalizeList, mergeResults, type MediaItem } from '../_shared/normalizeMedia.ts';
-
-/* .trim() defensively: a trailing newline or space pasted into a dashboard
-   secret field is a classic self-inflicted "invalid_client"/401 that looks
-   exactly like a wrong key. Cheap to guard against, costs nothing if the
-   value was already clean. */
-const TMDB_KEY = Deno.env.get('TMDB_API_KEY')!.trim();
-const SPOTIFY_ID = Deno.env.get('SPOTIFY_CLIENT_ID')!.trim();
-const SPOTIFY_SEC = Deno.env.get('SPOTIFY_CLIENT_SECRET')!.trim();
-const GOOGLE_KEY = Deno.env.get('GOOGLE_BOOKS_KEY')!.trim();
-
-/* Plain btoa() throws "outside of the Latin1 range" if either credential
-   contains any non-ASCII byte (e.g. a smart quote or icon-font glyph that
-   rode along on a copy-paste) — turning a bad-credential problem into a
-   confusing crash instead of a clean auth rejection. Encoding via UTF-8
-   bytes first means a stray character degrades to a normal Spotify
-   `invalid_client` response, which is at least diagnosable. */
-function toBase64(str: string): string {
-  const bytes = new TextEncoder().encode(str);
-  let binary = '';
-  bytes.forEach((b) => { binary += String.fromCharCode(b); });
-  return btoa(binary);
-}
-
-/* Logged once per cold start. Lengths only, never values — lets a future
-   debugging session confirm a secret is actually present and roughly the
-   right shape (Spotify's id/secret are each 32 chars) via query_logs,
-   without needing another live round-trip through the app to find out. */
-console.log(
-  'media-search booted. Secret lengths:',
-  JSON.stringify({
-    TMDB_API_KEY: TMDB_KEY.length,
-    SPOTIFY_CLIENT_ID: SPOTIFY_ID.length,
-    SPOTIFY_CLIENT_SECRET: SPOTIFY_SEC.length,
-    GOOGLE_BOOKS_KEY: GOOGLE_KEY.length,
-  })
-);
+import { TMDB_KEY, GOOGLE_KEY, getSpotifyToken, withTimeout } from '../_shared/providerAuth.ts';
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, content-type',
 };
 
-/* Spotify's client-credentials token lasts an hour. Cache it in module scope
-   so a warm instance is not re-authenticating on every search. */
-let spotifyToken: { value: string; expires: number } | null = null;
+const stripHtml = (raw: string): string =>
+  raw.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 
-async function getSpotifyToken(): Promise<string> {
-  if (spotifyToken && spotifyToken.expires > Date.now() + 60_000) {
-    return spotifyToken.value;
+/* TMDB's own overview is often thin or missing for older/obscure titles.
+   Backfilling from TVmaze (TV) and Wikipedia (film) is a nice-to-have, not
+   core, so it's capped at 3 enrichment calls per medium and never allowed to
+   fail the search — a timeout or a bad match just leaves the item exactly as
+   TMDB returned it. Never overwrites a synopsis TMDB already provided. */
+async function enrichTvSynopsis(item: MediaItem): Promise<MediaItem> {
+  try {
+    const url = `https://api.tvmaze.com/search/shows?q=${encodeURIComponent(item.title)}`;
+    const res = await withTimeout(fetch(url), 3000);
+    if (!res.ok) return item;
+    const results = await res.json();
+    const summary = results?.[0]?.show?.summary;
+    const synopsis = summary ? stripHtml(summary) : undefined;
+    return synopsis ? { ...item, synopsis } : item;
+  } catch {
+    return item;
   }
-  const res = await fetch('https://accounts.spotify.com/api/token', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Authorization: `Basic ${toBase64(`${SPOTIFY_ID}:${SPOTIFY_SEC}`)}`,
-    },
-    body: 'grant_type=client_credentials',
-  });
-  if (!res.ok) throw new Error(`spotify auth ${res.status} ${(await res.text()).slice(0, 300)}`);
-  const json = await res.json();
-  spotifyToken = {
-    value: json.access_token,
-    expires: Date.now() + json.expires_in * 1000,
-  };
-  return spotifyToken.value;
 }
 
-/* Each provider is wrapped so one failure cannot reject the whole search. */
-const withTimeout = (p: Promise<Response>, ms = 6000): Promise<Response> =>
-  Promise.race([
-    p,
-    new Promise<never>((_, rej) => setTimeout(() => rej(new Error('timeout')), ms)),
-  ]);
+async function enrichFilmSynopsis(item: MediaItem): Promise<MediaItem> {
+  try {
+    const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(item.title)}`;
+    const res = await withTimeout(fetch(url), 3000);
+    if (!res.ok) return item;
+    const json = await res.json();
+    return json.extract ? { ...item, synopsis: stripHtml(json.extract) } : item;
+  } catch {
+    return item;
+  }
+}
+
+async function enrichMissingSynopses(items: MediaItem[]): Promise<MediaItem[]> {
+  const ENRICH_BUDGET = 3;
+  let tvBudget = ENRICH_BUDGET;
+  let filmBudget = ENRICH_BUDGET;
+  return Promise.all(items.map((item) => {
+    if (item.synopsis) return item;
+    if (item.mediaType === 'TV' && tvBudget-- > 0) return enrichTvSynopsis(item);
+    if (item.mediaType === 'FILM' && filmBudget-- > 0) return enrichFilmSynopsis(item);
+    return item;
+  }));
+}
 
 async function searchTMDB(q: string, page = 1): Promise<MediaItem[]> {
   const url = `https://api.themoviedb.org/3/search/multi?api_key=${TMDB_KEY}`
@@ -93,10 +73,11 @@ async function searchTMDB(q: string, page = 1): Promise<MediaItem[]> {
   const res = await withTimeout(fetch(url));
   if (!res.ok) throw new Error(`tmdb ${res.status} ${(await res.text()).slice(0, 300)}`);
   const { results = [] } = await res.json();
-  return [
+  const items = [
     ...normalizeList(results.filter((r: any) => r.media_type === 'movie'), 'tmdb:movie'),
     ...normalizeList(results.filter((r: any) => r.media_type === 'tv'), 'tmdb:tv'),
   ];
+  return enrichMissingSynopses(items);
 }
 
 async function searchSpotify(q: string): Promise<MediaItem[]> {
@@ -118,6 +99,20 @@ async function searchGoogleBooks(q: string): Promise<MediaItem[]> {
   if (!res.ok) throw new Error(`google ${res.status} ${(await res.text()).slice(0, 300)}`);
   const json = await res.json();
   return normalizeList(json.items ?? [], 'google:book');
+}
+
+/* Keyless, and runs alongside Google Books rather than only after it fails —
+   sequential fallback would double search latency for a case that's already
+   fast, and Open Library's open catalog frequently covers books Google's
+   commercial one has thin or no data for. Both sources' results merge
+   together (mergeResults already dedupes on title+creator), so a book
+   findable in either shows up once. */
+async function searchOpenLibrary(q: string): Promise<MediaItem[]> {
+  const url = `https://openlibrary.org/search.json?q=${encodeURIComponent(q)}&limit=8`;
+  const res = await withTimeout(fetch(url));
+  if (!res.ok) throw new Error(`openlibrary ${res.status} ${(await res.text()).slice(0, 300)}`);
+  const json = await res.json();
+  return normalizeList(json.docs ?? [], 'openlibrary:book');
 }
 
 async function searchApple(q: string): Promise<MediaItem[]> {
@@ -163,11 +158,12 @@ serve(async (req) => {
 
     /* allSettled, not all: a provider that is down degrades the result,
        it does not fail the request. */
-    const names = ['tmdb', 'spotify', 'google', 'apple'];
+    const names = ['tmdb', 'spotify', 'google', 'openlibrary', 'apple'];
     const settled = await Promise.allSettled([
       searchTMDB(query, page),
       searchSpotify(query),
       searchGoogleBooks(query),
+      searchOpenLibrary(query),
       searchApple(query),
     ]);
 

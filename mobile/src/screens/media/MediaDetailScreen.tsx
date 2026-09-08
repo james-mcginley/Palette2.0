@@ -1,21 +1,24 @@
 import React from 'react';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 import type { RootStackParamList } from '@/navigation/types';
 import { AttributionFooter } from '@/components/AttributionFooter';
 import { colors, spacing, textStyles } from '@/theme/tokens';
 import { MEDIA_LABEL } from '@/lib/types/media';
+import { useMediaDetail } from '@/lib/api/mediaSearch';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'MediaDetail'>;
 
 /**
  * The media sheet from the brief — cover, synopsis, rating, log/save
- * actions. This pass only renders what's already in the route param (no
- * detail-fetch query yet — Phase 2) but wires in AttributionFooter for real,
- * since skipping it is an App Store/legal risk, not a cosmetic gap.
+ * actions. `route.params.media` (a search result or an existing log) is
+ * passed as `initialData` so those paths render instantly with no network
+ * round-trip; a screen opened from just an id (a badge, a curator-path node,
+ * a bare library reference) falls through to the media-detail edge function.
  */
 export function MediaDetailScreen({ route }: Props) {
-  const { media } = route.params;
+  const { mediaId, media: snapshot } = route.params;
+  const { data: media, isLoading, isError } = useMediaDetail(mediaId, snapshot);
 
   return (
     <ScrollView style={styles.root} contentContainerStyle={styles.content}>
@@ -30,9 +33,11 @@ export function MediaDetailScreen({ route }: Props) {
             <AttributionFooter medium={media.mediaType} />
           </View>
         </>
+      ) : isLoading ? (
+        <ActivityIndicator color={colors.accent} style={styles.spinner} />
       ) : (
         <Text style={styles.synopsis}>
-          No media snapshot passed — this screen needs a media-by-id query once one exists server-side.
+          {isError ? "Couldn't load this — check your connection and try again." : 'Not found.'}
         </Text>
       )}
     </ScrollView>
@@ -47,4 +52,5 @@ const styles = StyleSheet.create({
   creator: { ...textStyles.bodyMd, color: colors.textSecondary },
   synopsis: { ...textStyles.bodyMd, color: colors.textSecondary, marginTop: spacing[3] },
   footerWrap: { marginTop: spacing[6] },
+  spinner: { marginTop: spacing[6] },
 });
