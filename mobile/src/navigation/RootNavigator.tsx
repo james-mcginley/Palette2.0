@@ -22,6 +22,8 @@ import { CuratorPathScreen } from '@/screens/curator-path/CuratorPathScreen';
 import { CurationDetailScreen } from '@/screens/discover/CurationDetailScreen';
 import { FindPeopleScreen } from '@/screens/FindPeopleScreen';
 import { TermsScreen } from '@/screens/TermsScreen';
+import { AsksScreen } from '@/screens/asks/AsksScreen';
+import { AskDetailScreen } from '@/screens/asks/AskDetailScreen';
 import { colors } from '@/theme/tokens';
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -94,6 +96,16 @@ export function RootNavigator() {
             name="Terms"
             component={TermsScreen}
             options={{ headerShown: true, title: 'Terms of Use', headerStyle: modalScreenOptions.headerStyle, headerTintColor: modalScreenOptions.headerTintColor }}
+          />
+          <RootStack.Screen
+            name="Asks"
+            component={AsksScreen}
+            options={{ headerShown: true, title: 'Asks', headerStyle: modalScreenOptions.headerStyle, headerTintColor: modalScreenOptions.headerTintColor }}
+          />
+          <RootStack.Screen
+            name="AskDetail"
+            component={AskDetailScreen}
+            options={{ headerShown: true, title: '', headerStyle: modalScreenOptions.headerStyle, headerTintColor: modalScreenOptions.headerTintColor }}
           />
         </>
       )}

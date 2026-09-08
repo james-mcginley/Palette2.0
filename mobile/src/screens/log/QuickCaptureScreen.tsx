@@ -10,9 +10,9 @@ type Props = NativeStackScreenProps<RootStackParamList, 'QuickCapture'>;
 
 /**
  * The (+) sheet: search-as-you-type over media-search, tap a result to open
- * LogSheet. The brief also wants "start a list" / "ask for a rec" / "build a
- * curation" as sibling actions in this same sheet — deferred to Phase 3+
- * once asks/curations have any UI at all.
+ * LogSheet. The brief also wants "start a list" / "build a curation" as
+ * sibling actions in this same sheet — still deferred (no list/curation
+ * builder UI exists yet); "ask for a rec" now has somewhere to go.
  */
 export function QuickCaptureScreen({ navigation }: Props) {
   const [query, setQuery] = useState('');
@@ -28,6 +28,9 @@ export function QuickCaptureScreen({ navigation }: Props) {
         value={query}
         onChangeText={setQuery}
       />
+      <Pressable onPress={() => navigation.navigate('Asks')}>
+        <Text style={styles.askLink}>Ask for a recommendation instead</Text>
+      </Pressable>
       <FlatList
         data={isQueryLongEnough ? items : []}
         keyExtractor={(item) => item.id}
@@ -54,6 +57,7 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     ...textStyles.bodyMd,
   },
+  askLink: { ...textStyles.bodySm, color: colors.accent, textAlign: 'center' },
   row: { paddingVertical: spacing[3], borderBottomWidth: 1, borderBottomColor: colors.borderSoft },
   tag: { ...textStyles.monoSm, color: colors.amber, textTransform: 'uppercase', letterSpacing: 1.5 },
   title: { ...textStyles.bodyStrong, color: colors.textPrimary },

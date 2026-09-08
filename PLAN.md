@@ -254,17 +254,30 @@ reconnecting. ✅
   needs the tastemaker-vs-regular-user decision (a flag on `profiles`, most
   likely) — deferred rather than guessed, and there's no real tastemaker
   content yet to populate a shelf with regardless.
-- [ ] Asks: UI over `asks`/`ask_answers` (schema, RLS, and the
-  answered-notification trigger already exist).
+- [x] Asks: UI over `asks`/`ask_answers` (`AsksScreen`, `AskDetailScreen`,
+  `lib/api/asks.ts`) — post a question, browse and answer others' open
+  asks, thread of answers per ask. Answering closes an ask to further
+  answers, mirroring the existing RLS insert policy (`status = 'open'`
+  required) rather than fighting it — the composer just disappears once
+  `status` flips. Reached from a "Asks" button on Discover's search bar
+  (Palette.dc.html's own IA puts Asks as a Discover filter chip;
+  implemented here as its own screen instead of a fifth filter chip — same
+  destination, smaller change) and from QuickCaptureScreen's "Ask for a
+  recommendation instead" link, which had been sitting there as a dead
+  link since Phase 0 pending exactly this. `MailboxScreen` is real now too
+  (`lib/api/notifications.ts`) — `ask_answered` notifications open
+  `AskDetail` directly; `badge_earned`/`path_node_unlocked` render generic
+  copy since Phase 4 hasn't shipped the screens they'd link to.
 - [x] Report/block UI per `COMPLIANCE.md` §1 — `ReportBlockMenu` is the `⋯`
   entry point (reason list → optional detail → the required "we review
   reports within 24 hours" copy; block gets its own destructive confirm
   stating what it does, per the doc's exact wording). Built on two new
   cross-platform primitives, `ActionSheet` and `ConfirmDialog` — not
   `ActionSheetIOS`, which has no Android equivalent to fall back to later.
-  Wired into Feed/Friends log rows (via a new `moreMenu` slot on `MediaRow`)
-  and `CurationDetailScreen`'s header; Asks isn't built yet (task above) so
-  its own `⋯` waits until there's a screen to put it on. Settings → Privacy
+  Wired into Feed/Friends log rows (via a new `moreMenu` slot on `MediaRow`),
+  `CurationDetailScreen`'s header, and now `AskDetailScreen` (both the ask
+  and each answer) — all three of COMPLIANCE.md §1's named UGC surfaces
+  (curations, reviews/logs, Asks answers) now carry it. Settings → Privacy
   now has the required unblockable blocked-list and a Terms of Use link —
   the terms screen itself is a marked placeholder, not real legal text; it
   exists so the link and flow are real, but shipping still needs actual

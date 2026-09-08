@@ -29,4 +29,6 @@ export type RootStackParamList = {
   CurationDetail: { curationId: string; title?: string };
   FindPeople: undefined;
   Terms: undefined;
+  Asks: undefined;
+  AskDetail: { askId: string; question?: string };
 };

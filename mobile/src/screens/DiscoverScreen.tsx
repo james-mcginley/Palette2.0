@@ -31,14 +31,24 @@ export function DiscoverScreen() {
 
   return (
     <View style={styles.root}>
-      <TextInput
-        style={styles.input}
-        placeholder="Search books, film, TV, music, podcasts…"
-        placeholderTextColor={colors.textDim}
-        value={query}
-        onChangeText={setQuery}
-        autoCorrect={false}
-      />
+      <View style={styles.searchRow}>
+        <TextInput
+          style={styles.input}
+          placeholder="Search books, film, TV, music, podcasts…"
+          placeholderTextColor={colors.textDim}
+          value={query}
+          onChangeText={setQuery}
+          autoCorrect={false}
+        />
+        <Pressable
+          style={styles.asksButton}
+          onPress={() => navigation.navigate('Asks')}
+          accessibilityRole="button"
+          accessibilityLabel="Asks"
+        >
+          <Text style={styles.asksLabel}>Asks</Text>
+        </Pressable>
+      </View>
 
       {isQueryLongEnough && failedProviders.length > 0 && (
         <Text style={styles.warning}>
@@ -107,7 +117,9 @@ export function DiscoverScreen() {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.surfaceCanvas, padding: spacing[4], gap: spacing[3] },
+  searchRow: { flexDirection: 'row', gap: spacing[2] },
   input: {
+    flex: 1,
     backgroundColor: colors.surfaceBase,
     borderWidth: 1,
     borderColor: colors.borderDefault,
@@ -117,6 +129,16 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     ...textStyles.bodyMd,
   },
+  asksButton: {
+    minHeight: 44,
+    paddingHorizontal: spacing[4],
+    borderRadius: radii.full,
+    borderWidth: 1,
+    borderColor: colors.borderDefault,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  asksLabel: { ...textStyles.bodyStrong, color: colors.accent },
   warning: { ...textStyles.caption, color: colors.amber },
   list: { gap: spacing[2] },
   feedContent: { paddingBottom: spacing[8] },
