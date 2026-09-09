@@ -270,10 +270,22 @@ reconnecting. ✅
     a 'friends'-visibility row to the author's followers, and both views
     collapsed to a plain `select *` now that RLS (not the view's own WHERE)
     is the single source of truth for who can see what.
-- [ ] Feed: "Daily Vibe Anchor" prompt, curator/tastemaker shelves. Still
-  needs the tastemaker-vs-regular-user decision (a flag on `profiles`, most
-  likely) — deferred rather than guessed, and there's no real tastemaker
-  content yet to populate a shelf with regardless.
+- [x] Feed: "Daily Vibe Anchor" prompt (`components/DailyVibeAnchor.tsx`) —
+  found the actual spec in chat1.md:63 ("Featured top card prompting 'What
+  shaped your day today?' with a quick-log trigger") rather than guessing
+  at the name; a persistent `ListHeaderComponent`, not an empty-state
+  message, present whether or not there's already activity to look at.
+  Tastemaker-vs-regular-user was decided (user's call, not guessed): a
+  plain `is_tastemaker` boolean on `profiles`
+  (`0015_tastemaker_flag.sql`), set manually via the SQL editor — the same
+  "editorial content, seeded by an admin" pattern as `curator_paths`.
+  Column-level `GRANT`/`REVOKE`, not just RLS, is what actually stops a
+  user setting their own flag: the existing "users update their own
+  profile" policy is row-scoped with no column restriction, so a plain
+  `alter table` would have let any client `.update({is_tastemaker:true})`
+  on themselves. `components/TastemakerShelf.tsx` renders nothing at all
+  — not an empty state — until an account is actually flagged and has
+  logged something public.
 - [x] Asks: UI over `asks`/`ask_answers` (`AsksScreen`, `AskDetailScreen`,
   `lib/api/asks.ts`) — post a question, browse and answer others' open
   asks, thread of answers per ask. Answering closes an ask to further

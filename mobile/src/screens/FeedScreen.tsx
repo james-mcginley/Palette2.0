@@ -5,28 +5,48 @@ import { useAuthStore } from '@/state/authStore';
 import { colors, spacing, textStyles } from '@/theme/tokens';
 import { MediaRow } from '@/components/MediaRow';
 import { ReportBlockMenu } from '@/components/moderation/ReportBlockMenu';
+import { DailyVibeAnchor } from '@/components/DailyVibeAnchor';
+import { TastemakerShelf } from '@/components/TastemakerShelf';
 
 /**
  * "Feed keeps a short run of friends' logs; the full stream is the Friends
  * tab" (Palette.dc.html:6910) — this is that short run: own logs plus
  * whatever your followees have logged, capped rather than paginated.
+ *
+ * The Vibe Anchor and tastemaker shelf are a `ListHeaderComponent`, not
+ * gated behind the activity query's own loading/error/empty states — per
+ * chat1.md:63 the Anchor is "there whether or not you already have
+ * activity to look at."
  */
 export function FeedScreen() {
   const { data: logs, isLoading, error } = useFriendActivityFeed(20);
   const currentUserId = useAuthStore((s) => s.session?.user.id);
 
+  const header = (
+    <>
+      <DailyVibeAnchor />
+      <TastemakerShelf />
+    </>
+  );
+
   if (isLoading) {
     return (
-      <View style={styles.center}>
-        <ActivityIndicator color={colors.accent} />
+      <View style={styles.root}>
+        <View style={styles.content}>{header}</View>
+        <View style={styles.center}>
+          <ActivityIndicator color={colors.accent} />
+        </View>
       </View>
     );
   }
 
   if (error) {
     return (
-      <View style={styles.center}>
-        <Text style={styles.error}>Couldn't load your feed. Pull to retry once that's wired up.</Text>
+      <View style={styles.root}>
+        <View style={styles.content}>{header}</View>
+        <View style={styles.center}>
+          <Text style={styles.error}>Couldn't load your feed. Pull to retry once that's wired up.</Text>
+        </View>
       </View>
     );
   }
@@ -37,6 +57,7 @@ export function FeedScreen() {
       contentContainerStyle={styles.content}
       data={logs}
       keyExtractor={(item) => item.id}
+      ListHeaderComponent={header}
       ListEmptyComponent={
         <View style={styles.center}>
           <Text style={styles.emptyTitle}>Nothing here yet</Text>

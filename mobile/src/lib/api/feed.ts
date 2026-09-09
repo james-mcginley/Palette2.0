@@ -71,3 +71,33 @@ export function useFriendActivityStream() {
     enabled: Boolean(userId),
   });
 }
+
+/**
+ * The curator/tastemaker shelf — recent public logs from accounts flagged
+ * `profiles.is_tastemaker` (0015_tastemaker_flag.sql), independent of who
+ * you follow. Empty until an account is actually flagged one, same as
+ * curator_paths before it has any published content: a real empty state,
+ * not something padded out to look populated.
+ */
+export function useTastemakerShelf(limit = 10) {
+  return useQuery({
+    queryKey: ['feed', 'tastemaker-shelf', limit],
+    queryFn: async (): Promise<FriendActivityRow[]> => {
+      const { data: tastemakers, error: tastemakerError } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('is_tastemaker', true);
+      if (tastemakerError) throw tastemakerError;
+      if (!tastemakers || tastemakers.length === 0) return [];
+
+      const { data, error } = await supabase
+        .from('visible_logs')
+        .select('*')
+        .in('user_id', tastemakers.map((p) => p.id))
+        .order('created_at', { ascending: false })
+        .limit(limit);
+      if (error) throw error;
+      return attachAuthors(data as LogRow[]);
+    },
+  });
+}
