@@ -54,6 +54,18 @@ native driver, so timing/haptics (haptics are silently a no-op on web,
 which is correct, not a bug) may feel different even where they don't
 break outright.
 
+One rough edge that *was* fixed, because it would have blocked auth
+entirely rather than just looking different: `lib/supabase.ts` used
+`expo-secure-store` unconditionally for the session storage adapter.
+That module's web binding is an empty stub (no Keychain equivalent in a
+browser), so every call would throw the moment a sign-in tried to persist
+its session — the very first thing that happens after using the dev
+sign-in bypass above. Fixed by branching on `Platform.OS === 'web'` to a
+`localStorage`-backed adapter for web only; native builds still use the
+Keychain-backed adapter exactly as before. Verified with `npm run
+typecheck` plus `npx expo export` on both `--platform web` and
+`--platform ios`.
+
 ## What exists after this pass (Phase 0)
 
 - `supabase/migrations/*.sql` — full schema: profiles, follows, logs,
