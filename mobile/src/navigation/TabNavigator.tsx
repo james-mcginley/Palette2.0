@@ -8,18 +8,29 @@ import { FeedScreen } from '@/screens/FeedScreen';
 import { FriendsScreen } from '@/screens/FriendsScreen';
 import { DiscoverScreen } from '@/screens/DiscoverScreen';
 import { LibraryScreen } from '@/screens/LibraryScreen';
-import { colors, radii } from '@/theme/tokens';
+import { colors, fonts } from '@/theme/tokens';
+import { Icon, type IconName } from '@/components/Icon';
 import { useMyLogs } from '@/lib/api/logs';
 import { useEntryAnimationStore } from '@/state/entryAnimationStore';
 import { EntryAnimation, type EntryAnimationCover } from '@/components/entry/EntryAnimation';
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
+const tabIcon = (name: IconName) =>
+  function TabBarIcon({ color }: { color: string }) {
+    return <Icon name={name} color={color} size={20} />;
+  };
+
 /**
  * (+) isn't a real tab screen — it opens the quick-capture flow as a modal
- * over whichever tab you're on (the brief's "floating center action
- * button"). `tabBarButton` intercepts the press so React Navigation never
- * tries to render a screen for it.
+ * over whichever tab you're on. Per Palette.dc.html:6515 ("Sits inline with
+ * the rest now the bar is one flat banner, so it needs its own icon and
+ * label rather than the old raised treatment") this sits inline with the
+ * other four tabs, not lifted out as a floating FAB — `tabBarButton`
+ * intercepts the press so React Navigation never tries to render a screen
+ * for it, but the button itself now shares the same icon+label layout as
+ * every other tab (see `tabBarIcon`/`tabBarLabel` on the other screens,
+ * mirrored here by hand since this one isn't a real Tab.Screen render).
  */
 function AddTabButton() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -30,7 +41,8 @@ function AddTabButton() {
       accessibilityRole="button"
       accessibilityLabel="Log or start something new"
     >
-      <Text style={styles.addLabel}>+</Text>
+      <Icon name="plus" color={colors.textSecondary} size={20} />
+      <Text style={[styles.tabLabel, { color: colors.textSecondary }]}>Add</Text>
     </Pressable>
   );
 }
@@ -44,21 +56,22 @@ function TabNavigatorContent() {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarStyle: { backgroundColor: colors.surfaceBase, borderTopColor: colors.borderDefault },
+        tabBarStyle: styles.tabBar,
         tabBarActiveTintColor: colors.accent,
         tabBarInactiveTintColor: colors.textSecondary,
+        tabBarLabelStyle: styles.tabLabel,
       }}
     >
-      <Tab.Screen name="Feed" component={FeedScreen} />
-      <Tab.Screen name="Friends" component={FriendsScreen} />
+      <Tab.Screen name="Feed" component={FeedScreen} options={{ tabBarIcon: tabIcon('rss') }} />
+      <Tab.Screen name="Friends" component={FriendsScreen} options={{ tabBarIcon: tabIcon('users') }} />
       <Tab.Screen
         name="Add"
         component={AddPlaceholderScreen}
         options={{ tabBarButton: () => <AddTabButton /> }}
         listeners={{ tabPress: (e) => e.preventDefault() }}
       />
-      <Tab.Screen name="Discover" component={DiscoverScreen} />
-      <Tab.Screen name="Library" component={LibraryScreen} />
+      <Tab.Screen name="Discover" component={DiscoverScreen} options={{ tabBarIcon: tabIcon('search') }} />
+      <Tab.Screen name="Library" component={LibraryScreen} options={{ tabBarIcon: tabIcon('bookmark') }} />
     </Tab.Navigator>
   );
 }
@@ -101,19 +114,18 @@ export function TabNavigator() {
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  addButton: {
-    top: -18,
-    alignSelf: 'center',
-    width: 56,
-    height: 56,
-    borderRadius: radii.full,
-    backgroundColor: colors.accent,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: colors.accent,
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
-    elevation: 6,
+  tabBar: {
+    backgroundColor: colors.emeraldDeep,
+    borderTopColor: colors.borderSoft,
   },
-  addLabel: { fontSize: 28, lineHeight: 30, color: colors.textOnAccent },
+  tabLabel: {
+    fontFamily: fonts.mono,
+    fontSize: 8,
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
+  },
+  // Add isn't a real Tab.Screen (see AddTabButton above), so it can't pick up
+  // tabBarLabelStyle from screenOptions — this mirrors it by hand to sit
+  // flush with the other four tabs rather than as a raised, unlabeled FAB.
+  addButton: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 5 },
 });

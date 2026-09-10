@@ -102,6 +102,7 @@ export function LibraryScreen() {
           <MediaRow
             title={item.media_snapshot.title}
             mediaType={item.media_type}
+            imageUrl={item.media_snapshot.imageUrl}
             creator={item.media_snapshot.creator}
             releaseYear={item.media_snapshot.releaseYear}
             onPress={() =>

@@ -14,7 +14,11 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, content-type',
+  // supabase-js attaches `apikey` and `x-client-info` to every request,
+  // not just `authorization`/`content-type` — omitting them here doesn't
+  // break native or curl (neither enforces CORS), but a browser silently
+  // fails preflight and never sends the real request at all.
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
 serve(async (req) => {

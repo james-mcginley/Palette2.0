@@ -18,7 +18,11 @@ import { TMDB_KEY, GOOGLE_KEY, getSpotifyToken, withTimeout } from '../_shared/p
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, content-type',
+  // supabase-js attaches `apikey` and `x-client-info` to every request,
+  // not just `authorization`/`content-type` — omitting them here doesn't
+  // break native or curl (neither enforces CORS), but a browser silently
+  // fails preflight and never sends the real request at all.
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
 const stripHtml = (raw: string): string =>

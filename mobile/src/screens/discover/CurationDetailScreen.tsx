@@ -57,6 +57,7 @@ export function CurationDetailScreen({ route }: Props) {
         <MediaRow
           title={item.media_snapshot.title}
           mediaType={item.media_type}
+          imageUrl={item.media_snapshot.imageUrl}
           creator={item.media_snapshot.creator}
           releaseYear={item.media_snapshot.releaseYear}
           metaText={[String(index + 1), item.media_snapshot.creator].filter(Boolean).join('. ')}

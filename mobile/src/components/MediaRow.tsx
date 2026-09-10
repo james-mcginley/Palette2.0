@@ -1,11 +1,13 @@
 import React from 'react';
+import { Image } from 'expo-image';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors, radii, spacing, textStyles } from '@/theme/tokens';
+import { colors, radii, shadow, spacing, textStyles } from '@/theme/tokens';
 import { MEDIA_LABEL, type MediaType } from '@/lib/types/media';
 
 interface MediaRowProps {
   title: string;
   mediaType: MediaType;
+  imageUrl?: string;
   creator?: string;
   releaseYear?: number;
   rating?: number;
@@ -33,6 +35,7 @@ interface MediaRowProps {
 export function MediaRow({
   title,
   mediaType,
+  imageUrl,
   creator,
   releaseYear,
   rating,
@@ -67,9 +70,16 @@ export function MediaRow({
         accessibilityHint={onPress ? 'Opens details' : undefined}
         hitSlop={8}
       >
-        <Text style={styles.tag}>{MEDIA_LABEL[mediaType]}</Text>
-        <Text style={styles.title} numberOfLines={1}>{title}</Text>
-        {meta ? <Text style={styles.meta} numberOfLines={2}>{meta}</Text> : null}
+        {imageUrl ? (
+          <Image source={{ uri: imageUrl }} style={styles.cover} contentFit="cover" />
+        ) : (
+          <View style={styles.coverFallback} />
+        )}
+        <View style={styles.infoText}>
+          <Text style={styles.tag}>{MEDIA_LABEL[mediaType]}</Text>
+          <Text style={styles.title} numberOfLines={1}>{title}</Text>
+          {meta ? <Text style={styles.meta} numberOfLines={2}>{meta}</Text> : null}
+        </View>
       </Pressable>
 
       {trailingLabel ? (
@@ -103,16 +113,26 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.borderDefault,
     borderRadius: radii.md,
+    overflow: 'hidden',
     minHeight: 44,
+    ...shadow.card,
   },
   info: {
     flex: 1,
     minHeight: 44,
-    justifyContent: 'center',
-    paddingVertical: spacing[3],
-    paddingHorizontal: spacing[4],
-    gap: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing[3],
+    paddingVertical: spacing[2],
+    paddingHorizontal: spacing[3],
   },
+  // 46x62 (a poster-ish 3:4 ratio) matches the design's Feed/Library card
+  // cover art — the field the UI is built to render without, per
+  // normalizeMedia.ts's "never invent data" constraint, hence the fallback
+  // box below rather than a placeholder image.
+  cover: { width: 46, height: 62, borderRadius: 14, borderWidth: 1, borderColor: colors.borderSoft },
+  coverFallback: { width: 46, height: 62, borderRadius: 14, borderWidth: 1, borderColor: colors.borderSoft, backgroundColor: colors.surfaceRaised },
+  infoText: { flex: 1, justifyContent: 'center', gap: 2 },
   pressed: { opacity: 0.7 },
   tag: { ...textStyles.monoSm, color: colors.amber, textTransform: 'uppercase', letterSpacing: 1.5 },
   title: { ...textStyles.bodyStrong, color: colors.textPrimary },

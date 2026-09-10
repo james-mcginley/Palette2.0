@@ -74,6 +74,7 @@ export function DiscoverScreen() {
             <MediaRow
               title={item.title}
               mediaType={item.mediaType}
+              imageUrl={item.imageUrl}
               creator={item.creator}
               releaseYear={item.releaseYear}
               rating={item.rating}

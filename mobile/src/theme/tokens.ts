@@ -29,6 +29,9 @@ export const colors = {
   borderDefault: '#332D27',
   borderSoft: '#272220',
 
+  // Tab bar only — the design's `--emerald-deep`, darker than surfaceBase.
+  emeraldDeep: '#141210',
+
   accent: '#1D8A62',
   accentHover: '#25A375',
   accentPress: '#166F4E',
