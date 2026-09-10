@@ -40,10 +40,23 @@ const OnboardingStack = createNativeStackNavigator<OnboardingStackParamList>();
  * genres → follow people), gated in front of Sign in with Apple/Google on
  * WelcomeScreen. Auth happens on the first step, not after — you can't
  * personalize genre/people suggestions for someone who isn't signed in yet.
+ *
+ * `initialRouteName` matters more than it looks: the moment sign-in
+ * resolves, `useMyProfile` flips from disabled to fetching, which trips
+ * RootNavigator's `isProfileLoading` branch below and unmounts this whole
+ * navigator in favor of a bare spinner. When the profile query resolves,
+ * this remounts fresh — discarding whatever screen WelcomeScreen's
+ * post-sign-in `navigation.navigate('ImportLists')` had moved it to, and
+ * defaulting back to its first declared screen. Without this prop every
+ * successful sign-in (Apple included, not just the dev bypass) would dead-end
+ * back on Welcome instead of continuing onboarding.
  */
-function OnboardingNavigator() {
+function OnboardingNavigator({ hasSession }: { hasSession: boolean }) {
   return (
-    <OnboardingStack.Navigator screenOptions={{ headerShown: false }}>
+    <OnboardingStack.Navigator
+      initialRouteName={hasSession ? 'ImportLists' : 'Welcome'}
+      screenOptions={{ headerShown: false }}
+    >
       <OnboardingStack.Screen name="Welcome" component={WelcomeScreen} />
       <OnboardingStack.Screen name="ImportLists" component={ImportListsScreen} />
       <OnboardingStack.Screen name="PickLovedTitles" component={PickLovedTitlesScreen} />
@@ -77,7 +90,9 @@ export function RootNavigator() {
   return (
     <RootStack.Navigator screenOptions={{ headerShown: false }}>
       {!session || !hasOnboarded ? (
-        <RootStack.Screen name="Onboarding" component={OnboardingNavigator} />
+        <RootStack.Screen name="Onboarding">
+          {() => <OnboardingNavigator hasSession={Boolean(session)} />}
+        </RootStack.Screen>
       ) : (
         <>
           <RootStack.Screen name="Main" component={TabNavigator} />
