@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useLibraryItems, useUpdateItemStatus, STATUS_LABEL, nextStatus, type ItemStatus } from '@/lib/api/library';
 import { MediaRow } from '@/components/MediaRow';
+import { ProfileHeader } from '@/components/ProfileHeader';
 import { colors, radii, spacing, textStyles } from '@/theme/tokens';
 import { MEDIA_LABEL, type MediaType } from '@/lib/types/media';
 import type { RootStackParamList } from '@/navigation/types';
@@ -66,16 +67,11 @@ export function LibraryScreen() {
 
   return (
     <View style={styles.root}>
-      <View style={styles.headerRow}>
-        <Text style={styles.headerTitle}>Library</Text>
-        <Pressable
-          style={styles.profileButton}
+      <View style={styles.headerPad}>
+        <ProfileHeader
           onPress={() => navigation.navigate('Profile', undefined)}
-          accessibilityRole="button"
-          accessibilityLabel="Your profile"
-        >
-          <Text style={styles.profileLabel}>Profile</Text>
-        </Pressable>
+          onPressSettings={() => navigation.navigate('Settings')}
+        />
       </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.pillRow}>
         {STATUS_FILTERS.map((f) => (
@@ -137,13 +133,7 @@ function Pill({ label, active, onPress }: { label: string; active: boolean; onPr
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.surfaceCanvas },
-  headerRow: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: spacing[4], paddingTop: spacing[5],
-  },
-  headerTitle: { ...textStyles.displayMd, color: colors.textPrimary },
-  profileButton: { minHeight: 36, paddingHorizontal: spacing[3], borderRadius: radii.full, borderWidth: 1, borderColor: colors.borderDefault, alignItems: 'center', justifyContent: 'center' },
-  profileLabel: { ...textStyles.caption, color: colors.textSecondary },
+  headerPad: { paddingHorizontal: spacing[4], paddingTop: spacing[5] },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing[6] },
   error: { ...textStyles.bodySm, color: colors.danger, textAlign: 'center' },
   emptyTitle: { ...textStyles.headingMd, color: colors.textPrimary },

@@ -8,6 +8,7 @@ export interface ProfileRow {
   handle: string | null;
   bio: string | null;
   avatar_url: string | null;
+  city: string | null;
   is_private: boolean;
   onboarding_completed_at: string | null;
 }
@@ -27,7 +28,7 @@ export function useMyProfile() {
     queryFn: async (): Promise<ProfileRow> => {
       const { data, error } = await supabase
         .from('profiles')
-        .select('id, display_name, handle, bio, avatar_url, is_private, onboarding_completed_at')
+        .select('id, display_name, handle, bio, avatar_url, city, is_private, onboarding_completed_at')
         .eq('id', userId)
         .single();
       if (error) throw error;

@@ -55,6 +55,25 @@ export function useSearchProfiles(rawQuery: string) {
   });
 }
 
+/** Follower/following counts for the profile header stats row — a `head:
+ *  true` select returns just the row count via Postgrest's Content-Range
+ *  header, not the rows themselves, so this is one cheap round-trip each. */
+export function useFollowCounts(userId: string | undefined) {
+  return useQuery({
+    queryKey: ['follows', 'counts', userId],
+    queryFn: async (): Promise<{ followers: number; following: number }> => {
+      const [followers, following] = await Promise.all([
+        supabase.from('follows').select('*', { count: 'exact', head: true }).eq('followee_id', userId),
+        supabase.from('follows').select('*', { count: 'exact', head: true }).eq('follower_id', userId),
+      ]);
+      if (followers.error) throw followers.error;
+      if (following.error) throw following.error;
+      return { followers: followers.count ?? 0, following: following.count ?? 0 };
+    },
+    enabled: Boolean(userId),
+  });
+}
+
 /** The signed-in user's own follow list, as a Set for O(1) "am I following
  *  this person" lookups while rendering a search/suggestion list. */
 export function useFollowingIds() {
