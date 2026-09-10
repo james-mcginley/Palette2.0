@@ -32,6 +32,28 @@ every commit's typecheck output this whole project. `npm run typecheck` and
 `npx expo export --platform ios` are both clean as of this commit — the
 first time either has been true.
 
+## Desktop testing: the app also runs in a browser
+
+Not a real target platform (nothing here changes iOS-first), but useful:
+`react-native-web`, `react-dom` and `@expo/metro-runtime` are now
+dependencies, and `npx expo start --web` boots the real app in a desktop
+browser with hot reload. This is what makes it possible to click through
+the app without an Apple Developer account or a physical device — pair it
+with `WelcomeScreen`'s `__DEV__`-gated email/password sign-in (see that
+file) to get past auth without Sign in with Apple at all, which has no web
+implementation and won't render its button outside `Platform.OS ===
+'ios'` anyway.
+
+Known rough edges on web, not fixed here since none of them are the actual
+target platform: `@react-native-community/datetimepicker` (LogSheet's
+backdate picker) has weak-to-no web support; `expo-file-system`/
+`expo-sharing` (Settings' data export) assume a real filesystem a browser
+doesn't have; the Logbook page-turn's 3D `rotateY` and the entry
+animation's card-rise both run through CSS transforms on web rather than
+native driver, so timing/haptics (haptics are silently a no-op on web,
+which is correct, not a bug) may feel different even where they don't
+break outright.
+
 ## What exists after this pass (Phase 0)
 
 - `supabase/migrations/*.sql` — full schema: profiles, follows, logs,
