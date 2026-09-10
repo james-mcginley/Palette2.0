@@ -214,8 +214,13 @@ reconnecting. ✅
   Spotify's client-credentials token exchange, split out of `media-search` so
   `media-detail` doesn't duplicate (and risk drifting from) the same logic.
   Includes the `.trim()` and UTF-8-safe base64 fixes from the Spotify
-  `invalid_client` debugging session — **not yet re-verified against live
-  Spotify credentials since those fixes deployed.**
+  `invalid_client` debugging session. **Re-verified live**: the root cause
+  turned out to be a stale/mistyped secret value in Supabase, not a code
+  bug — confirming Spotify's own credentials worked via a direct
+  `curl` against `accounts.spotify.com/api/token`, then re-pasting fresh
+  values into Supabase's Edge Function secrets, fixed it. `verify.sh`
+  against the live `media-search` function now reports TMDB, Spotify and
+  Google Books all OK.
 - [x] Discover editorial grid from `EDITORIAL_SYSTEM.md` §1: all four tile
   types (`components/discover/{Feature,Collection,Ranked,Standard}Tile.tsx`),
   arranged by `lib/discoverGrid.ts` per the doc's grid-rhythm rule (no tile
